@@ -1,15 +1,95 @@
+:root{
+    --system-black:#373737;
+    --system-black-30:#C3C3C3;
+
+}
+
 #nodes,#links,#labels{
     position:absolute;
     top:0;
     left:0;
 }
 
+
 #dom{
     pointer-events: none;
 }
 
-
+/* #C3C3C3 */
 text{
+    cursor:default;
+    font-family:'Monument Grotesk', sans-serif;
     /* fill:rgba(255,0,0,0.3); */
-    background:rgba(255,0,0,0.3); 
+    paint-order: stroke;
+    stroke:white;
+    stroke-width:2px;
+    
+    font-size:13px;
+    fill:var(--system-black);
+    transform:translate(6px,4px);
+
+}
+
+circle{
+    fill:white;
+    stroke:var(--system-black);
+    stroke-width:2px;
+    /* paint-order:stroke; */
+}
+
+line{
+    stroke:var(--system-black-30);
+}
+
+line.main{
+    stroke:var(--system-black);
+    stroke-width:2px;
+}
+
+.animate line{
+    stroke:var(--system-black);
+    opacity:0.1;
+    stroke-width:4px;
+    stroke-linecap: round;
+    animation: directionality 2s linear infinite forwards;
+    --gap:30;
+    stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
+    stroke-dashoffset:var(--str);
+}
+
+.animate line.main{
+    opacity:0.2;
+    stroke-width:8px;
+}
+
+@keyframes directionality{
+    0%{
+        stroke-dashoffset:var(--str);
+    }
+    
+    100%{
+        stroke-dashoffset:0;
+    }
+}
+
+@font-face {
+    font-family:'Monument Grotesk';
+    src: url('../assets/monument-trial-regular.woff2');
+}
+@font-face {
+    font-family:'Monument Grotesk';
+    font-style:italic;
+    src: url('../assets/monument-trial-regular-italic.woff2');
+}
+
+@font-face {
+    font-family:'Monument Grotesk';
+    font-weight:600;
+    src: url('../assets/monument-trial-bold.woff2');
+}
+@font-face {
+    font-family:'Monument Grotesk';
+    font-weight:600;
+    font-style: italic;
+    src: url('../assets/monument-trial-bold-italic.woff2');
 }
