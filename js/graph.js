@@ -1,7 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-let nodes=[];
-let links;
+
 
 let nodeSvg=document.querySelector('#nodes');
 let labels=document.querySelector('#labels');
@@ -18,113 +17,25 @@ function setSize(){
     h=window.innerHeight;
     d3.select(nodeSvg).attr('width',w+'px');
     d3.select(nodeSvg).attr('height',h+'px');
-    d3.select(nodeSvg).attr('viewBox',`${0 - w/2} ${0 - h/2} ${w} ${h}`);
+    d3.select(nodeSvg).attr('viewBox',`0 0 ${w} ${h}`);
 
     d3.select(linkSvg).attr('width',w+'px');
     d3.select(linkSvg).attr('height',h+'px');
-    d3.select(linkSvg).attr('viewBox',`${0 - w/2} ${0 - h/2} ${w} ${h}`);
+    d3.select(linkSvg).attr('viewBox',`0 0 ${w} ${h}`);
 
     d3.select(labels).attr('width',w+'px');
     d3.select(labels).attr('height',h+'px');
-    d3.select(labels).attr('viewBox',`${0 - w/2} ${0 - h/2} ${w} ${h}`);
+    d3.select(labels).attr('viewBox',`0 0 ${w} ${h}`);
 }
 
 
 
-fetch('data/worst_case_links.json')
+fetch('data/dag-data.json')
 .then((response) => response.json())
 .then((data) => {
-    let cancerLinks=data.links.filter(a=>a.source=="cancer"||a.target=="cancer");
-    let coffeeLinks=data.links.filter(a=>a.source=="coffee"||a.target=="coffee");
-
-    // let primary=data.links.filter(a=>a.source=='coffee'||a.source=='cancer'||a.target=='coffee'||a.target=='cancer')
-   
-    let nodeLog=[];
-
-
-    // must check to see if any node is connected to both coffee and cancer
-
-    for(let link of data.links){
-      if(!nodeLog.find(a=>a.name==link.target)) nodeLog.push({name:link.target});
-      if(!nodeLog.find(a=>a.name==link.source)) nodeLog.push({name:link.source});
-
-      if(link.source=='coffee'||link.source=='coffee'){
-        let node=nodeLog.find(a=>a.name==link.target);
-        node[link.source]=true;
-      }else if(link.target=='coffee'||link.target=='cancer'){
-        let node=nodeLog.find(a=>a.name==link.source);
-        node[link.target]=true;
-      }
-    }
-
-   let mediating=nodeLog.filter(a=>a.coffee&&a.cancer);
-
-    // let mediating=nodeLog.filter(a=>a.source&&a.target);
-    // let conflating=nodeLog.filter(a=>{
-    //   let withThisSource=data.links.filter(x=>x.source==a.name);
-    //   let withValidTarget=withThisSource.filter(x=> (x.source=="coffee"||mediating.find(y=>x.source==y.name))&&(x.target=="cancer"||mediating.find(y=>x.target==y.name)) );
-    //   return withValidTarget.length>0;
-    // });
-    // console.log(mediating,conflating);
-    
-
-
-    let sourceUpstream=data.links.filter(a=>a.target=='coffee');
-    let targetDownstream=data.links.filter(a=>a.source=='cancer');
-    
-    let filteredLinks=data.links.filter(link=>{
-      return mediating.find(node=>node.name==link.target||node.name==link.source);
-    });
-
-    let mediatingAndUpstream=data.links.filter(link=>{
-      return mediating.find(node=>node.name==link.target||node.name==link.source)
-      &&link.target=='coffee'
-    });
-
-    let mediatingAndDownstream=data.links.filter(link=>{
-      return mediating.find(node=>node.name==link.target||node.name==link.source)
-      &&link.source=='cancer'
-    });
-
-    mediatingAndDownstream.forEach((link)=>{
-      if(sourceUpstream.find(a=>a.name==link.target)) console.log('loop!',link.target)
-    })
-
-    
-
-    console.log(
-      'upstream:',sourceUpstream,
-      '\ndownstream:',targetDownstream,
-      '\nmediating:',filteredLinks,
-      '\nmediating and upstream:',mediatingAndUpstream,
-      '\nmediating and downstream:',mediatingAndDownstream
-      )
-
-    // console.log(sourceUpstream,targetDownstream);
-    // links=sourceUpstream.concat(targetDownstream);
-
-    // links=filteredLinks;
-    
-    links=cancerLinks.slice(0,20).concat(coffeeLinks.slice(0,20))
-    // links=data.links.slice(0,20);
-    links=links.map(a=>{
-      return  {
-        "source":a.source,
-        "target":a.target,
-        "type":'relation'
-      }
-    })
-    links.unshift({
-      "source":"coffee",
-      "target":"cancer",
-      "type":"relation main"
-    })
-
-    for(let link of links){
-        if (!nodes.find(a=>a.val==link.source)) nodes.push({val:link.source});
-        if (!nodes.find(a=>a.val==link.target)) nodes.push({val:link.target});
-    }
-    console.log(links,nodes)
+    let nodes=data.nodes;
+    let links=data.links;
+    console.log(nodes,links)
 
     force(
         {
@@ -140,8 +51,8 @@ fetch('data/worst_case_links.json')
             nodeId: d => d.val,
             width:w,
             height:h,
-            nodeStrength:-1200,
-            linkStrength:1,
+            nodeStrength:-1000,
+            linkStrength:1.5,
             nodeTitle:d=>d.val
             // invalidation // a promise to stop the simulation when the cell is re-run
           }
@@ -223,7 +134,9 @@ function force({
         .force("y", d3.forceY())
         .on("tick", ticked);
   
-  
+        // simulation.alpha(1).restart();
+
+        
     let nodeBox = d3.select(nodeSvg);
     let labelBox = d3.select(labels);
     console.log(dom)
@@ -244,24 +157,25 @@ function force({
       .join("line")
       .attr('class',(d)=>d.type);
 
-      const link2 = linkBox.append("g")
-      .attr('class','animate')
-      .attr("stroke", linkStroke)
-      .attr("stroke-opacity", linkStrokeOpacity)
-      .attr("stroke-width", typeof linkStrokeWidth !== "function" ? linkStrokeWidth : null)
-      .attr("stroke-linecap", linkStrokeLinecap)
-      .attr("vector-effect", "non-scaling-stroke")
-      .selectAll("line")
-      .data(links)
-      .join("line")
-      .attr('class',(d)=>d.type);
+      // const link2 = linkBox.append("g")
+      // .attr('class','animate')
+      // .attr("stroke", linkStroke)
+      // .attr("stroke-opacity", linkStrokeOpacity)
+      // .attr("stroke-width", typeof linkStrokeWidth !== "function" ? linkStrokeWidth : null)
+      // .attr("stroke-linecap", linkStrokeLinecap)
+      // .attr("vector-effect", "non-scaling-stroke")
+      // .selectAll("line")
+      // .data(links)
+      // .join("line")
+      // .attr('class',(d)=>d.type);
   
     if (W) link.attr("stroke-width", ({index: i}) => W[i]);
   
   
     nodeBox.selectAll('circle').remove();
   
-    const node = nodeBox.append("g")
+    const node = nodeBox
+      .append('g')
         .attr("fill", nodeFill)
         .attr("stroke", nodeStroke)
         .attr("stroke-opacity", nodeStrokeOpacity)
@@ -270,8 +184,18 @@ function force({
       .data(nodes)
       .join("circle")
         .attr("r", nodeRadius)
-        .attr('class','node')
+        .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
+        .each(function(d){
+          if(d.val=='coffee'){
+            d.fx=w/3;
+            d.fy=h/3;
+          }else if(d.val=='cancer'){
+            d.fx=w/3*2;
+            d.fy=h/3*2;
+          }
+        })
         .call(drag(simulation))
+        .on('click',click)
     
 
 
@@ -284,7 +208,14 @@ function force({
         .join('text')
         .attr('class','noselect')
         .text((d)=>d.val)
-        .call(drag(simulation));
+        .call(drag(simulation))
+        .on('click',click)
+
+      function click(event, d) {
+        delete d.fx;
+        delete d.fy;
+        simulation.alpha(1).restart();
+      }
 
   
   
@@ -305,12 +236,12 @@ function force({
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
 
-        link2
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y)
-        .style('--str',(d,i,nodes)=>nodes[i].getTotalLength());
+        // link2
+        // .attr("x1", d => d.source.x)
+        // .attr("y1", d => d.source.y)
+        // .attr("x2", d => d.target.x)
+        // .attr("y2", d => d.target.y)
+        // .style('--str',(d,i,nodes)=>nodes[i].getTotalLength());
 
         labelEls
         .attr("x", d => d.x)
@@ -335,8 +266,11 @@ function force({
   
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
-        event.subject.fx = null;
-        event.subject.fy = null;
+        // if(event.subject.val!=='coffee'&&event.subject.val!=='cancer'){
+        //   event.subject.fx = null;
+        //   event.subject.fy = null;
+        // }
+        
       }
   
       return d3.drag()
