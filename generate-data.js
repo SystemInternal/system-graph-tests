@@ -6,7 +6,8 @@ async function generate(){
     let source_data=await generate_from_source();
     // console.log(source_data)
     fs.writeFile('data/dag-data.json', JSON.stringify({
-        nodes:source_data.nodes,
+        // nodes:source_data.nodes,
+        nodes_separated:source_data.nodes_separated,
         links:source_data.links
     }), err => {
         if (err) {
@@ -53,74 +54,116 @@ async function generate_from_source(){
             if(!target.cancer_source) target.cancer_source=link.source=="cancer"
         }
     }
-    nodes_processed=nodes_default.map(node=>{
-        //look for nodes which are a source for coffee as target
-        let upstream=node.coffee_target;
-       
-        //look for nodes which are a target for cancer as a source
-        let downstream=node.cancer_source;
-        //look for nodes which are both a source for coffee as target and a source for cancer as target
-        let confounding=node.cancer_target&&node.coffee_target;
-        //look for nodes which are both a target for coffee as source and a source for cancer as target
-        let mediating=node.coffee_source&&node.cancer_target;
 
-        delete node.coffee_source;
-        delete node.coffee_target;
-        delete node.cancer_source;
-        delete node.cancer_target;
+    let nodes_separated={
+        coffee:[],
+        cancer:[],
+        coffee_upstream:[],
+        coffee_downstream:[],
+        cancer_upstream:[],
+        cancer_downstream:[],
+        confounders:[],
+        mediators:[]
+    }
 
-        return {
-            val:node.val,
-            upstream:upstream?upstream:false,
-            downstream:downstream?downstream:false,
-            confounding:confounding?confounding:false,
-            mediating:mediating?mediating:false,
-            factor:node.cancer_target==true
+    for(let node of nodes_default){
+        if(node.val=="cancer"||node.val=="coffee"){
+            node.primary=true;
+            nodes_separated[node.val].push(node);
+        } else if(node.cancer_target&&node.coffee_target){
+            //look for nodes which are both a source for coffee as target and a source for cancer as target
+            nodes_separated.confounders.push(node);
+        }else if(node.coffee_source&&node.cancer_target){
+            //look for nodes which are both a target for coffee as source and a source for cancer as target
+            nodes_separated.mediators.push(node);
+        }else{
+            //make a note that all the bidirectional relationships go in upstream
+            if(node.coffee_target){
+                //look for nodes which are a source for coffee as target
+                nodes_separated.coffee_upstream.push(node);
+            }
+            if(node.coffee_source){
+                //look for nodes which are a target for coffee as source
+                nodes_separated.coffee_downstream.push(node);
+            }
+            if(node.cancer_target){
+                nodes_separated.cancer_upstream.push(node);
+            }
+            if(node.cancer_source){
+                nodes_separated.cancer_downstream.push(node);
+            }
+
         }
-    })
+        
+    
+    
+    }
+
+
+    // nodes_processed=nodes_default.map(node=>{
+    //     //look for nodes which are a source for coffee as target
+    //     let upstream=node.coffee_target;
+       
+    //     //look for nodes which are a target for cancer as a source
+    //     let downstream=node.cancer_source;
+    //     //look for nodes which are both a source for coffee as target and a source for cancer as target
+    //     let confounding=node.cancer_target&&node.coffee_target;
+    //     //look for nodes which are both a target for coffee as source and a source for cancer as target
+    //     let mediating=node.coffee_source&&node.cancer_target;
+
+    //     delete node.coffee_source;
+    //     delete node.coffee_target;
+    //     delete node.cancer_source;
+    //     delete node.cancer_target;
+
+    //     return {
+    //         val:node.val,
+    //         upstream:upstream?upstream:false,
+    //         downstream:downstream?downstream:false,
+    //         confounding:confounding?confounding:false,
+    //         mediating:mediating?mediating:false,
+    //         factor:node.cancer_target==true
+    //     }
+    // })
+
+    
+
+    // console.log(nodes_separated);
 
     //in the future, look for indirectly confounding/mediating
         //(if one of the node's targets is a source for cancer or coffee)
     //and also make sure the nodes that they target get included 
 
-    // let upstream_or_factor=nodes_processed.filter(node=>node.upstream||node.factor);
-    // for(let node of nodes_processed){
-    //     let source_links=links.filter(a=>a.source==node.val);
-    //     for(let link of source_links){
-    //         if(upstream_or_factor.find(a=>a.val==link.target )) console.log(link);
-    //     }
-
-    // }
 
 
+    // let nodes_relevant=nodes_processed.filter(node=>node.confounding||node.upstream||node.downstream);
 
-    let nodes_relevant=nodes_processed.filter(node=>node.confounding||node.upstream||node.downstream);
+    // nodes_relevant.unshift({
+    //     val:"coffee",
+    //     upstream:false,
+    //     downstream:false,
+    //     confounding:false,
+    //     mediating:false
+    // })
+    // let links_relevant=links.filter(link=>nodes_relevant.find(node=>node.val==link.source)&&nodes_relevant.find(node=>node.val==link.target));
+    // links_relevant.push({
+    //     source:'coffee',
+    //     target:'cancer',
+    //     type:'primary'
+    // })
 
-    nodes_relevant.unshift({
-        val:"coffee",
-        upstream:false,
-        downstream:false,
-        confounding:false,
-        mediating:false
-    })
-    
-    let links_relevant=links.filter(link=>nodes_relevant.find(node=>node.val==link.source)&&nodes_relevant.find(node=>node.val==link.target));
-    links_relevant.push({
+
+    links.push({
         source:'coffee',
         target:'cancer',
         type:'primary'
     })
     
-    // map(link=>{
-    //     if(link.source=='coffee'&&link.target=='cancer') link.type='primary'
-    // })
 
-
-    
     return {
-        links:links_relevant,
-        nodes:nodes_relevant,
-        nodes_default:nodes_default
+        links:links,
+        nodes:nodes_default,
+        nodes_separated:nodes_separated
     }
 
     

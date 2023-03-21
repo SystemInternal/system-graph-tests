@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <title>motion directionality</title>
+    <title>system graph tester</title>
     <meta http-equiv="Content-Type" content="text/html;" charset="utf-8" >
     <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/clearstyle.css">
@@ -19,11 +19,49 @@
   </head>
 
   <body>
-    <svg id="links"></svg>
+    <div id="controls">
+      <section id="coffee">
+        <h3>Coffee</h3>
+        <div class="row-wrap" data-name="upstream">
+          <input type="range" name="upstream" min="0" max="100" value="50">
+          <label for="upstream">upstream</label>
+          <span class="count"></span>
+        </div>
+        <div class="row-wrap" data-name="downstream">
+          <input type="range" name="downstream" min="0" max="100" value="50">
+          <label for="downstream">downstream</label>
+          <span class="count"></span>  
+        </div>
+      </section>
+      <section id="cancer">
+        <h3>Cancer</h3>
+        <div class="row-wrap" data-name="upstream">
+          <input type="range" name="upstream" min="0" max="100" value="50">
+          <label for="upstream">upstream</label>
+          <span class="count"></span>
+        </div>
+        <div class="row-wrap" data-name="downstream">
+          <input type="range" name="downstream" min="0" max="100" value="50">
+          <label for="downstream">downstream</label>
+          <span class="count"></span>  
+        </div>
+      </section>
+      <section id="intermediate">
+        <h3>intermediate</h3>
+        <div class="row-wrap" data-name="confounders">
+          <input type="range" name="confounders" min="0" max="100" value="50">
+          <label for="confounders">confounders</label>
+          <span class="count"></span>
+        </div>
+        <div class="row-wrap" data-name="mediators">
+          <input type="range" name="mediators" min="0" max="100" value="50">
+          <label for="mediators">mediators</label>
+          <span class="count"></span>  
+        </div>
+      </section>
+
+    </div>
     <svg id="nodes"></svg>
-    <svg id="labels"></svg>
-   
-    <div id="dom"></div>
 
     
   </body>
