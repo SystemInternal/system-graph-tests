@@ -81,15 +81,12 @@ async function generate_from_source(){
             if(node.coffee_target){
                 //look for nodes which are a source for coffee as target
                 nodes_separated.coffee_upstream.push(node);
-            }
-            if(node.coffee_source){
+            }else if(node.coffee_source){
                 //look for nodes which are a target for coffee as source
                 nodes_separated.coffee_downstream.push(node);
-            }
-            if(node.cancer_target){
+            }else if(node.cancer_target){
                 nodes_separated.cancer_upstream.push(node);
-            }
-            if(node.cancer_source){
+            }else if(node.cancer_source){
                 nodes_separated.cancer_downstream.push(node);
             }
 
