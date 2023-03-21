@@ -83,7 +83,7 @@ function generate_force_input(){
   for(let [key,list] of Object.entries(node_lists)) nodes=nodes.concat(list.slice(0,map[key].count));
 
   //run a filter to get rid of duplicates
-  nodes=nodes.filter((node,i)=>nodes.indexOf(node) == i);
+  nodes=nodes.filter((node,i)=>nodes.findIndex(a=>a.val==node.val) == i);
 
   
   //use that node list to filter the links
