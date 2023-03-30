@@ -1,18 +1,40 @@
 :root{
     --system-black:#373737;
     --system-black-30:#C3C3C3;
+    --bg:#F5F5F5;
 
 }
 
+main{
+    position:relative;
+    width:100vw;
+    height:100vh;
+}
+
 #controls{
-    position:fixed;
+    position:absolute;
     top:0;
     left:0;
+    /* position:fixed;
+    top:0;
+    left:0; */
     z-index:20;
     padding:20px;
     /* width:400px; */
     font-family:'Monument Grotesk', sans-serif;
     font-size:13px;
+    width:300px;
+    background-color: white;
+    height:100%;
+    box-sizing:border-box;
+}
+
+#graph{
+    position:absolute;
+    top:20px;
+    right:20px;
+    flex:1;
+    background-color: var(--bg);
 }
 
 section{
@@ -47,11 +69,7 @@ h3{
     content:')';
 }
 
-#nodes,#links,#labels{
-    position:absolute;
-    top:0;
-    left:0;
-}
+
 
 
 #dom{
@@ -64,32 +82,56 @@ text{
     font-family:'Monument Grotesk', sans-serif;
     /* fill:rgba(255,0,0,0.3); */
     paint-order: stroke;
-    stroke:white;
+    stroke:var(--bg);
     stroke-width:2px;
     
     font-size:13px;
     fill:var(--system-black);
     transform:translate(6px,4px);
-
+    text-transform:capitalize;
+    
 }
 
+text.primary{
+    font-size:16px;
+    font-weight:600;
+}
+
+
+
 circle{
-    fill:white;
+    fill:var(--bg);
     stroke:var(--system-black);
     stroke-width:2px;
     /* paint-order:stroke; */
 }
 
-line{
+
+
+line,polyline{
     stroke:var(--system-black-30);
 }
 
-line.primary{
+
+marker{
+    fill:none;
+    stroke:var(--system-black-30);
+    stroke-width:1px;
+}
+
+#arrow-primary{
     stroke:var(--system-black);
     stroke-width:2px;
 }
 
-.animate line{
+
+
+line.primary,polyline.primary{
+    stroke:var(--system-black);
+    stroke-width:2px;
+}
+
+.animate line,.animate polyline{
     stroke:var(--system-black);
     opacity:0;
     stroke-width:4px;
@@ -101,7 +143,7 @@ line.primary{
     stroke-dashoffset:var(--str); */
 }
 
-.animate line.primary{
+.animate line.primary,.animate polyline.primary{
     opacity:0.2;
     stroke-width:8px;
 }

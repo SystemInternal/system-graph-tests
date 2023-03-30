@@ -2,9 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 
 
-let nodeSvg=document.querySelector('#nodes');
-let labels=document.querySelector('#labels');
-let linkSvg=document.querySelector('#links');
+let graph_svg=document.querySelector('#graph');
 
 let w=window.innerWidth;
 let h=window.innerHeight;
@@ -28,19 +26,12 @@ setSize();
 window.addEventListener('resize',setSize);
 
 function setSize(){
-    w=window.innerWidth;
-    h=window.innerHeight;
-    d3.select(nodeSvg).attr('width',w+'px');
-    d3.select(nodeSvg).attr('height',h+'px');
-    d3.select(nodeSvg).attr('viewBox',`0 0 ${w} ${h}`);
+    w=window.innerWidth - 320;
+    h=window.innerHeight - 40;
+    d3.select(graph_svg).attr('width',w+'px');
+    d3.select(graph_svg).attr('height',h+'px');
+    d3.select(graph_svg).attr('viewBox',`0 0 ${w} ${h}`);
 
-    d3.select(linkSvg).attr('width',w+'px');
-    d3.select(linkSvg).attr('height',h+'px');
-    d3.select(linkSvg).attr('viewBox',`0 0 ${w} ${h}`);
-
-    d3.select(labels).attr('width',w+'px');
-    d3.select(labels).attr('height',h+'px');
-    d3.select(labels).attr('viewBox',`0 0 ${w} ${h}`);
 }
 
 
@@ -111,7 +102,7 @@ fetch('data/dag-data.json')
     init(node_lists,links);
     force_input=generate_force_input();
 
-    force=new Force(force_input.nodes,force_input.links,nodeSvg);
+    force=new Force(force_input.nodes,force_input.links,graph_svg);
 
   });
 
@@ -123,9 +114,9 @@ const Force= class {
     //initiate simulation with settings ----------------
 
     this.forceNode = d3.forceManyBody();
-    this.forceNode.strength(-1000);
+    this.forceNode.strength(-2000);
     this.forceLink = d3.forceLink().id(d=>d.val);
-    this.forceLink.strength(1.5);
+    this.forceLink.strength(2);
     this.forceLink.distance(()=>{ return 140; });
 
     this.simulation = d3.forceSimulation()
@@ -145,7 +136,7 @@ const Force= class {
       .attr("stroke-width", 1)
       .attr("stroke-linecap", "round")
       .attr("vector-effect", "non-scaling-stroke")
-      .selectAll("line")
+      .selectAll("polyline")
 
     this.node = this.box
       .append('g')
@@ -194,10 +185,17 @@ const Force= class {
 
   ticked() {  
     this.link
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => d.target.x)
-      .attr("y2", d => d.target.y);
+      .attr('points',d=>{
+        let mid={
+          x:d.source.x+(d.target.x-d.source.x)/2,
+          y:d.source.y+(d.target.y-d.source.y)/2
+        }
+        return `${d.source.x},${d.source.y} ${mid.x},${mid.y} ${d.target.x},${d.target.y}`;
+      })
+      // .attr("x1", d => d.source.x)
+      // .attr("y1", d => d.source.y)
+      // .attr("x2", d => d.target.x)
+      // .attr("y2", d => d.target.y);
 
     this.label
       .attr("x", d => d.x)
@@ -224,7 +222,8 @@ const Force= class {
 
     this.link=this.link
       .data(links)
-      .join('line')
+      .join('polyline')
+      .attr('marker-mid',(d)=>`url(#arrow${d.type?'-primary':''})`)
       .attr('class',(d)=>d.type);
       
     
@@ -251,7 +250,7 @@ const Force= class {
     this.label=this.label
         .data(nodes)
         .join(enter=>enter.append('text')
-          .attr('class','noselect')
+          .attr('class',(d)=>`noselect ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
           .text((d)=>d.val)
           .call(this.drag(this.simulation))
           .on('click',this.clicked.bind(this)))
