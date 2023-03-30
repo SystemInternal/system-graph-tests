@@ -63,7 +63,7 @@ function init(node_lists,links){
         counter.innerText=range.value;
         map[key].count=range.value;
         force_input=generate_force_input();
-        console.log(force_input);
+        // console.log(force_input);
         force.update(force_input.nodes,force_input.links)
       })
     }
@@ -84,9 +84,7 @@ function generate_force_input(){
 
   
   //run a filter to get rid of duplicates
-  console.log('before filtering',nodes.length);
   nodes=nodes.filter((node,i)=>nodes.findIndex(a=>a.val==node.val) == i);
-  console.log('after filtering',nodes.length);
   
   //use that node list to filter the links
   let links_relevant=links.filter(link=>nodes.find(node=>{
@@ -115,10 +113,6 @@ fetch('data/dag-data.json')
 
     force=new Force(force_input.nodes,force_input.links,nodeSvg);
 
-
-
-
-
   });
 
 
@@ -126,31 +120,32 @@ fetch('data/dag-data.json')
 const Force= class {
   constructor(nodes,links,svg){
 
+    //initiate simulation with settings ----------------
+
     this.forceNode = d3.forceManyBody();
-    this.forceLink = d3.forceLink(links).id(({index: i}) => d3.map(nodes, (d) => d.val)[i]);
     this.forceNode.strength(-1000);
+    this.forceLink = d3.forceLink().id(d=>d.val);
     this.forceLink.strength(1.5);
     this.forceLink.distance(()=>{ return 140; });
 
-    this.simulation = d3.forceSimulation(nodes)
+    this.simulation = d3.forceSimulation()
       .force("link", this.forceLink)
       .force("charge", this.forceNode)
       .force("x", d3.forceX())
       .force("y", d3.forceY())
       .on("tick", this.ticked.bind(this));
     
+    
+    //initiate groups for graph elements -----------------
+
     this.box = d3.select(svg);
-    this.box.selectAll('line').remove();
     this.link=this.box.append("g")
-        .attr("stroke", "black")
-        .attr("stroke-opacity", 1)
-        .attr("stroke-width", 1)
-        .attr("stroke-linecap", "round")
-        .attr("vector-effect", "non-scaling-stroke")
-        .selectAll("line")
-        .data(links)
-        .join("line")
-        .attr('class',(d)=>d.type)
+      .attr("stroke", "black")
+      .attr("stroke-opacity", 1)
+      .attr("stroke-width", 1)
+      .attr("stroke-linecap", "round")
+      .attr("vector-effect", "non-scaling-stroke")
+      .selectAll("line")
 
     this.node = this.box
       .append('g')
@@ -159,32 +154,13 @@ const Force= class {
         .attr("stroke-opacity", 1)
         .attr("stroke-width", 1)
       .selectAll("circle")
-      .data(nodes)
-      .join("circle")
-        .attr("r", 3)
-        .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
-        .each(function(d){
-          if(d.val=='coffee'){
-            d.fx=w/3;
-            d.fy=h/3;
-          }else if(d.val=='cancer'){
-            d.fx=w/3*2;
-            d.fy=h/3*2;
-          }
-        })
-        .call(this.drag(this.simulation))
-        .on('click',this.clicked.bind(this))
-    
-      this.box.selectAll('text').remove();
+  
+    this.label = this.box
+      .append('g')
+      .selectAll('text')
 
-      this.label = this.box
-          .selectAll('text')
-          .data(nodes)
-          .join('text')
-          .attr('class','noselect')
-          .text((d)=>d.val)
-          .call(this.drag(this.simulation))
-          .on('click',this.clicked.bind(this))
+    this.update(nodes,links);
+
   
   }
 
@@ -216,46 +192,113 @@ const Force= class {
       .on("end", dragended);
   }
 
-  ticked() {
-  
-    function grid(val){
-      return 36*Math.floor(val/36);
-    }
-    
+  ticked() {  
     this.link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
 
     this.label
-    .attr("x", d => d.x)
-    .attr("y", d => d.y );
+      .attr("x", d => d.x)
+      .attr("y", d => d.y );
 
     this.node
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y);
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
   }
 
   update(nodes,links){
     // Make a shallow copy to protect against mutation, while
     // recycling old nodes to preserve position and velocity.
 
-    // const old = new Map(this.node.data().map(d => [d.id, d]));
-    // nodes = nodes.map(d => Object.assign(old.get(d.val) || {}, d));
-    // links = links.map(d => Object.assign({}, d));
+    const old = new Map(this.node.data().map(d => [d.val, d]));
+    console.log(old)
+    nodes = nodes.map(d => Object.assign(old.get(d.val) || {}, d));
+    links = links.map(d => Object.assign({}, d));
+    console.log(nodes[100])
 
     this.simulation.nodes(nodes);
     this.simulation.force("link").links(links);
     this.simulation.alpha(1).restart();
 
-    this.node = this.node
+
+
+    this.link=this.link
+      .data(links)
+      .join(enter=>enter.append('line').attr('class',(d)=>d.type))
+      
+    
+    this.node=this.node
       .data(nodes)
-      .join("circle")
+      .join(enter=>enter.append('circle')
         .attr("r", 3)
+        .attr('data-val',(d)=>d.val)
         .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
+        .each(function(d){
+          if(d.val=='coffee'){
+            d.fx=w/3;
+            d.fy=h/3;
+          }else if(d.val=='cancer'){
+            d.fx=w/3*2;
+            d.fy=h/3*2;
+          }
+        })
         .call(this.drag(this.simulation))
-        .on('click',this.clicked.bind(this))
+        .on('click',this.clicked.bind(this)))
+
+
+      // .join("circle")
+      //   .attr("r", 3)
+      //   .attr('data-val',(d)=>d.val)
+      //   .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
+      //   .each(function(d){
+      //     if(d.val=='coffee'){
+      //       d.fx=w/3;
+      //       d.fy=h/3;
+      //     }else if(d.val=='cancer'){
+      //       d.fx=w/3*2;
+      //       d.fy=h/3*2;
+      //     }
+      //   })
+      //   .call(this.drag(this.simulation))
+      //   .on('click',this.clicked.bind(this))
+    
+    this.label=this.label
+        .data(nodes)
+        .join(enter=>enter.append('text')
+          .attr('class','noselect')
+          .text((d)=>d.val)
+          .call(this.drag(this.simulation))
+          .on('click',this.clicked.bind(this)))
+        
+
+
+
+
+    //----------
+    // this.node = this.node
+    //   .data(nodes)
+    //   .join("circle")
+    //     .attr("r", 3)
+    //     .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
+    //     .call(this.drag(this.simulation))
+    //     .on('click',this.clicked.bind(this))
+        
+    //   this.label = this.label
+    //       .data(nodes)
+    //       .join('text')
+    //       .attr('class','noselect')
+    //       .text((d)=>d.val)
+    //       .call(this.drag(this.simulation))
+    //       .on('click',this.clicked.bind(this))
+
+
+    //   this.link = this.link
+    //   .data(links)
+    //   .join("line")
+    //   .attr('class',(d)=>d.type);
+
 
 
       // .join(enter =>{ 
@@ -275,28 +318,6 @@ const Force= class {
       //     .on('click',this.clicked.bind(this))
       //   }
       // );
-        
-      this.label = this.label
-          .data(nodes)
-          .join('text')
-          .attr('class','noselect')
-          .text((d)=>d.val)
-          .call(this.drag(this.simulation))
-          .on('click',this.clicked.bind(this))
-
-
-          // .join('text')
-          // .attr('class','noselect')
-          // .text((d)=>d.val)
-          // .call(this.drag(this.simulation))
-          // .on('click',this.clicked.bind(this))
-
-
-      this.link = this.link
-      .data(links)
-      .join("line")
-      .attr('class',(d)=>d.type);
-
   }
 }
 
