@@ -213,10 +213,8 @@ const Force= class {
     // recycling old nodes to preserve position and velocity.
 
     const old = new Map(this.node.data().map(d => [d.val, d]));
-    console.log(old)
     nodes = nodes.map(d => Object.assign(old.get(d.val) || {}, d));
     links = links.map(d => Object.assign({}, d));
-    console.log(nodes[100])
 
     this.simulation.nodes(nodes);
     this.simulation.force("link").links(links);
@@ -226,7 +224,8 @@ const Force= class {
 
     this.link=this.link
       .data(links)
-      .join(enter=>enter.append('line').attr('class',(d)=>d.type))
+      .join('line')
+      .attr('class',(d)=>d.type);
       
     
     this.node=this.node
@@ -248,21 +247,6 @@ const Force= class {
         .on('click',this.clicked.bind(this)))
 
 
-      // .join("circle")
-      //   .attr("r", 3)
-      //   .attr('data-val',(d)=>d.val)
-      //   .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
-      //   .each(function(d){
-      //     if(d.val=='coffee'){
-      //       d.fx=w/3;
-      //       d.fy=h/3;
-      //     }else if(d.val=='cancer'){
-      //       d.fx=w/3*2;
-      //       d.fy=h/3*2;
-      //     }
-      //   })
-      //   .call(this.drag(this.simulation))
-      //   .on('click',this.clicked.bind(this))
     
     this.label=this.label
         .data(nodes)
@@ -271,53 +255,7 @@ const Force= class {
           .text((d)=>d.val)
           .call(this.drag(this.simulation))
           .on('click',this.clicked.bind(this)))
-        
 
-
-
-
-    //----------
-    // this.node = this.node
-    //   .data(nodes)
-    //   .join("circle")
-    //     .attr("r", 3)
-    //     .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
-    //     .call(this.drag(this.simulation))
-    //     .on('click',this.clicked.bind(this))
-        
-    //   this.label = this.label
-    //       .data(nodes)
-    //       .join('text')
-    //       .attr('class','noselect')
-    //       .text((d)=>d.val)
-    //       .call(this.drag(this.simulation))
-    //       .on('click',this.clicked.bind(this))
-
-
-    //   this.link = this.link
-    //   .data(links)
-    //   .join("line")
-    //   .attr('class',(d)=>d.type);
-
-
-
-      // .join(enter =>{ 
-      //     enter.append("circle")
-      //     .attr("r", 3)
-      //     .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
-      //     .each(function(d){
-      //       if(d.val=='coffee'){
-      //         d.fx=w/3;
-      //         d.fy=h/3;
-      //       }else if(d.val=='cancer'){
-      //         d.fx=w/3*2;
-      //         d.fy=h/3*2;
-      //       }
-      //     })
-      //     .call(this.drag(this.simulation))
-      //     .on('click',this.clicked.bind(this))
-      //   }
-      // );
   }
 }
 
