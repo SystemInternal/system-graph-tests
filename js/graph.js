@@ -26,7 +26,8 @@ setSize();
 window.addEventListener('resize',setSize);
 
 function setSize(){
-    w=window.innerWidth - 320;
+    let sidebar=parseInt(getComputedStyle(document.body).getPropertyValue('--sidebar').replace('px','')); 
+    w=window.innerWidth - sidebar + 20;
     h=window.innerHeight - 40;
     d3.select(graph_svg).attr('width',w+'px');
     d3.select(graph_svg).attr('height',h+'px');
@@ -58,11 +59,25 @@ function init(node_lists,links){
         force.update(force_input.nodes,force_input.links)
       })
     }
-    
-
-
 
   }
+
+
+  document.querySelectorAll('#graph-settings .row-wrap').forEach((field)=>{
+    let range=field.querySelector('input[type="range"]');
+    let counter=field.querySelector('.count');
+
+    range.addEventListener('change',function(){
+      counter.innerText=range.value;
+      force.updateSim(field.dataset.name,range.value);
+      // map[key].count=range.value;
+      // force_input=generate_force_input();
+      // // console.log(force_input);
+      // force.update(force_input.nodes,force_input.links)
+    })
+
+
+  })
 }
 
 
@@ -256,6 +271,13 @@ const Force= class {
           .on('click',this.clicked.bind(this)))
 
   }
+
+  updateSim(setting,value){
+    this.simulation.force(setting).strength(value);
+    this.simulation.alpha(1).restart();
+  }
+
+
 }
 
 

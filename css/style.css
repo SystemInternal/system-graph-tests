@@ -2,7 +2,7 @@
     --system-black:#373737;
     --system-black-30:#C3C3C3;
     --bg:#F5F5F5;
-
+    --sidebar:340px;
 }
 
 main{
@@ -23,7 +23,7 @@ main{
     /* width:400px; */
     font-family:'Monument Grotesk', sans-serif;
     font-size:13px;
-    width:300px;
+    width:var(--sidebar);
     background-color: white;
     height:100%;
     box-sizing:border-box;
@@ -33,7 +33,6 @@ main{
     position:absolute;
     top:20px;
     right:20px;
-    flex:1;
     background-color: var(--bg);
 }
 
@@ -61,12 +60,16 @@ h3{
     width:150px;
 }
 
+.count{
+    font-family:'Monument Grotesk Mono';
+    letter-spacing: -1px;
+}
 
 .count::before{
-    content:'(';
+    content:'[';
 }
 .count::after{
-    content:')';
+    content:']';
 }
 
 
@@ -162,6 +165,12 @@ line.primary,polyline.primary{
     font-family:'Monument Grotesk';
     src: url('../assets/monument-trial-regular.woff2');
 }
+
+@font-face {
+    font-family:'Monument Grotesk Mono';
+    src: url('../assets/monument-trial-mono-regular.woff2');
+}
+
 @font-face {
     font-family:'Monument Grotesk';
     font-style:italic;
