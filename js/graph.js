@@ -37,6 +37,8 @@ function setSize(){
 
 
 function init(node_lists,links){
+  let main=document.querySelector('main');
+
   let keys=Object.keys(node_lists);
   for(let key of keys){
     // console.log(key);
@@ -57,6 +59,42 @@ function init(node_lists,links){
         force_input=generate_force_input();
         // console.log(force_input);
         force.update(force_input.nodes,force_input.links)
+      })
+    }else{
+      let checkbox=document.querySelector(`#${key} input[type="checkbox"]`);
+
+      // function resetField(name,on){
+      //   map[name+'upstream'].count=on?node_lists[key].length:0;
+      // }
+
+      checkbox.addEventListener('change',function(){
+        if(checkbox.checked){
+          map[key].count=1;
+          map[key+'_upstream'].count=node_lists[key+'_upstream'].length;
+          map[key+'_upstream'].field.querySelector('input').value=node_lists[key+'_upstream'].length;
+          map[key+'_upstream'].field.querySelector('.count').innerText=node_lists[key+'_upstream'].length;
+          map[key+'_downstream'].count=node_lists[key+'_upstream'].length;
+          map[key+'_downstream'].field.querySelector('.count').innerText=node_lists[key+'_downstream'].length;
+          map[key+'_downstream'].field.querySelector('input').value=node_lists[key+'_downstream'].length;
+          main.classList.remove('topic-view');
+        }else{
+          map[key].count=0;
+          map[key+'_upstream'].count=0;
+          map[key+'_upstream'].field.querySelector('input').value=0;
+          map[key+'_upstream'].field.querySelector('.count').innerText=0;
+
+          map[key+'_downstream'].count=0;
+          map[key+'_downstream'].field.querySelector('input').value=0;
+          map[key+'_downstream'].field.querySelector('.count').innerText=0;
+
+
+          main.classList.add('topic-view');
+          main.dataset.viewing=key=="coffee"?"cancer":"coffee";
+        }
+        
+      
+        force_input=generate_force_input();
+        force.update(force_input.nodes,force_input.links);
       })
     }
 
@@ -228,6 +266,7 @@ const Force= class {
     const old = new Map(this.node.data().map(d => [d.val, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.val) || {}, d));
     links = links.map(d => Object.assign({}, d));
+    console.log(nodes);
 
     this.simulation.nodes(nodes);
     this.simulation.force("link").links(links);
