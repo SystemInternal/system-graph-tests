@@ -52,6 +52,13 @@ main.topic-view[data-viewing="cancer"] #coffee .row-wrap{
     background-color: var(--bg);
 }
 
+#graph g{
+    z-index:10;
+}
+#graph g.link-lines,#graph g.node-label-bgs{
+    z-index:5;
+}
+
 section{
     margin-bottom:10px;
 }
@@ -107,8 +114,7 @@ text{
     font-family:'Monument Grotesk', sans-serif;
     /* fill:rgba(255,0,0,0.3); */
     paint-order: stroke;
-    stroke:var(--bg);
-    stroke-width:2px;
+    
     
     font-size:13px;
     fill:var(--system-black);
@@ -117,11 +123,41 @@ text{
     
 }
 
+text:not(text.has-type){
+    stroke:var(--bg);
+    stroke-width:2px;
+}
+
 text.primary{
     font-size:16px;
     font-weight:600;
 }
 
+
+
+.row-wrap.color{
+    opacity:0;
+    margin-bottom:2px;
+}
+
+.see-categories .row-wrap.color{
+    opacity:1;
+}
+
+.row-wrap.color .swatch{
+    display:inline-block;
+    width:20px;
+    height:20px;
+    background-color: var(--color);
+}
+
+.node-label-bgs{
+    opacity:0;
+}
+
+.see-categories .node-label-bgs{
+    opacity:1;
+}
 
 
 circle{

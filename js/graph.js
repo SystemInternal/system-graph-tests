@@ -1,22 +1,27 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 
-
+let main=document.querySelector('main');
 let graph_svg=document.querySelector('#graph');
 
 let w=window.innerWidth;
 let h=window.innerHeight;
 
+let primary_nodes=["coffee","cancer"];
 
+let type_colors={
+  disease:'#FEB3FF',
+  treatment:'#7EF5CB',
+  genetic:'#FFFF00',
+  behavior:'#FFA07A',
+  symptom:'#cba1ff'
+}
 
 let map={};
 let force_input;
-let node_lists;
-let links;
+let link_lists;
+let nodes;
 
-// let link;
-// let node;
-// let label;
 
 let force;
 
@@ -36,69 +41,73 @@ function setSize(){
 }
 
 
-function init(node_lists,links){
-  let main=document.querySelector('main');
+fetch('data/dag-link-data.json')
+.then((response) => response.json())
+.then((data) => {
+    nodes=data.nodes;
+    link_lists=data.links_categorized;
+ 
+    init(link_lists,nodes);
+    force_input=generate_force_input();
 
-  let keys=Object.keys(node_lists);
+    force=new Force(force_input.nodes,force_input.links,graph_svg);
+
+});
+
+function init(link_lists,nodes){
+  let keys=Object.keys(link_lists);
+
   for(let key of keys){
-    // console.log(key);
     let parts=key.split('_')
     map[key]={
-      count:node_lists[key].length
+      count:link_lists[key].length
     };
-    if(key!=='coffee'&&key!=='cancer'){
+
+    if(parts[0]!=='primary'){
       map[key].field=parts.length>1?document.querySelector(`#${parts[0]} div[data-name="${parts[1]}"]`):document.querySelector(`div[data-name="${parts[0]}"]`)
       let range=map[key].field.querySelector('input');
       let counter=map[key].field.querySelector('.count');
-      range.max=node_lists[key].length;
-      range.value=node_lists[key].length;
-      counter.innerText=node_lists[key].length;
+      range.max=link_lists[key].length;
+      range.value=link_lists[key].length;
+      counter.innerText=link_lists[key].length;
+
+
+      range.addEventListener('input',function(){
+        counter.innerText=range.value;
+      })
+
       range.addEventListener('change',function(){
         counter.innerText=range.value;
-        map[key].count=range.value;
+        map[key].count=parseInt(range.value);
         force_input=generate_force_input();
-        // console.log(force_input);
         force.update(force_input.nodes,force_input.links)
       })
-    }else{
-      let checkbox=document.querySelector(`#${key} input[type="checkbox"]`);
-
-      // function resetField(name,on){
-      //   map[name+'upstream'].count=on?node_lists[key].length:0;
-      // }
-
-      checkbox.addEventListener('change',function(){
-        if(checkbox.checked){
-          map[key].count=1;
-          map[key+'_upstream'].count=node_lists[key+'_upstream'].length;
-          map[key+'_upstream'].field.querySelector('input').value=node_lists[key+'_upstream'].length;
-          map[key+'_upstream'].field.querySelector('.count').innerText=node_lists[key+'_upstream'].length;
-          map[key+'_downstream'].count=node_lists[key+'_upstream'].length;
-          map[key+'_downstream'].field.querySelector('.count').innerText=node_lists[key+'_downstream'].length;
-          map[key+'_downstream'].field.querySelector('input').value=node_lists[key+'_downstream'].length;
-          main.classList.remove('topic-view');
-        }else{
-          map[key].count=0;
-          map[key+'_upstream'].count=0;
-          map[key+'_upstream'].field.querySelector('input').value=0;
-          map[key+'_upstream'].field.querySelector('.count').innerText=0;
-
-          map[key+'_downstream'].count=0;
-          map[key+'_downstream'].field.querySelector('input').value=0;
-          map[key+'_downstream'].field.querySelector('.count').innerText=0;
-
-
-          main.classList.add('topic-view');
-          main.dataset.viewing=key=="coffee"?"cancer":"coffee";
-        }
-        
-      
-        force_input=generate_force_input();
-        force.update(force_input.nodes,force_input.links);
-      })
     }
+    
+    
 
   }
+
+  let key_section=document.querySelector('#key')
+  console.log(Object.entries(type_colors));
+  for(let [type,color] of Object.entries(type_colors)){
+    let row=document.createElement('div')
+    let swatch=document.createElement('div');
+    let text=document.createElement('span');
+    
+    row.classList.add('row-wrap')
+    row.classList.add('color')
+    row.style.setProperty('--color',color)
+    text.innerText=type;
+    swatch.classList.add('swatch')
+    row.appendChild(swatch)
+    row.appendChild(text);
+    key_section.appendChild(row);
+  }
+  key_section.querySelector('input[type="checkbox').addEventListener('click',function(){
+    if(key_section.querySelector('input[type="checkbox').checked) main.classList.add('see-categories')
+    else  main.classList.remove('see-categories')
+  })
 
 
   document.querySelectorAll('#graph-settings .row-wrap').forEach((field)=>{
@@ -108,10 +117,6 @@ function init(node_lists,links){
     range.addEventListener('change',function(){
       counter.innerText=range.value;
       force.updateSim(field.dataset.name,range.value);
-      // map[key].count=range.value;
-      // force_input=generate_force_input();
-      // // console.log(force_input);
-      // force.update(force_input.nodes,force_input.links)
     })
 
 
@@ -121,48 +126,50 @@ function init(node_lists,links){
 
 function generate_force_input(){
 
-  let nodes=[];
+  // let nodes=[];
   //slice each array according to the map count for it
   //combine all arrays into a composite
-  for(let [key,list] of Object.entries(node_lists)) nodes=nodes.concat(list.slice(0,map[key].count));
+  let links=[];
+  
+  for(let [key,list] of Object.entries(link_lists)){
+    let addition=[];
+    if(list[0] && "links" in list[0]){
+      for(let i=0;i<map[key].count;i++){
+        let group=list[i]
+        addition=addition.concat(group.links)
+      }
+    }else{
+      addition=list.slice(0,map[key].count);
+    }
+    
+    links=links.concat(addition);
+  }
+
+  let nodes_relevant=nodes.filter(node=>{
+    return links.find(a=>{
+      return a.source==node.val||a.target==node.val;
+    })||node.primary;
+  })
 
   
-  //run a filter to get rid of duplicates
-  nodes=nodes.filter((node,i)=>nodes.findIndex(a=>a.val==node.val) == i);
-  
-  //use that node list to filter the links
-  let links_relevant=links.filter(link=>nodes.find(node=>{
-    if(typeof link.source=='string') return node.val==link.source
-    else return node.val==link.source.val
-  })&&nodes.find(node=>{
-    if(typeof link.target=='string') return node.val==link.target
-    else return node.val==link.target.val
-  }));
   return {
-    nodes:nodes,
-    links:links_relevant
+    nodes:nodes_relevant,
+    links:links
   }
 
   
 }
 
-fetch('data/dag-data.json')
-.then((response) => response.json())
-.then((data) => {
-    node_lists=data.nodes_separated;
-    links=data.links;
-
-    init(node_lists,links);
-    force_input=generate_force_input();
-
-    force=new Force(force_input.nodes,force_input.links,graph_svg);
-
-  });
 
 
 
 const Force= class {
   constructor(nodes,links,svg){
+
+    this.x_margin="5";
+    this.y_margin="2";
+
+    this.type_colors=type_colors
 
     //initiate simulation with settings ----------------
 
@@ -184,6 +191,7 @@ const Force= class {
 
     this.box = d3.select(svg);
     this.link=this.box.append("g")
+    .attr('class','link-lines')
       .attr("stroke", "black")
       .attr("stroke-opacity", 1)
       .attr("stroke-width", 1)
@@ -191,8 +199,14 @@ const Force= class {
       .attr("vector-effect", "non-scaling-stroke")
       .selectAll("polyline")
 
+    this.label_bg=this.box
+      .append("g")
+      .attr('class','node-label-bgs')
+      .selectAll("rect")
+
     this.node = this.box
       .append('g')
+        .attr('class','node-circles')
         .attr("fill", "currentColor")
         .attr("stroke", "#fff")
         .attr("stroke-opacity", 1)
@@ -201,7 +215,10 @@ const Force= class {
   
     this.label = this.box
       .append('g')
+      .attr('class','node-labels')
       .selectAll('text')
+
+    
 
     this.update(nodes,links);
 
@@ -245,14 +262,14 @@ const Force= class {
         }
         return `${d.source.x},${d.source.y} ${mid.x},${mid.y} ${d.target.x},${d.target.y}`;
       })
-      // .attr("x1", d => d.source.x)
-      // .attr("y1", d => d.source.y)
-      // .attr("x2", d => d.target.x)
-      // .attr("y2", d => d.target.y);
 
     this.label
       .attr("x", d => d.x)
       .attr("y", d => d.y );
+    
+    this.label_bg
+      .attr("x", d => d.x - this.x_margin * (d.primary?2.5:3) )
+      .attr("y", d => d.y - this.y_margin * (d.primary?7:6)  );
 
     this.node
       .attr("cx", d => d.x)
@@ -262,31 +279,37 @@ const Force= class {
   update(nodes,links){
     // Make a shallow copy to protect against mutation, while
     // recycling old nodes to preserve position and velocity.
+    console.log(nodes.find(a=>a.val=='cancer'))
 
-    const old = new Map(this.node.data().map(d => [d.val, d]));
-    nodes = nodes.map(d => Object.assign(old.get(d.val) || {}, d));
-    links = links.map(d => Object.assign({}, d));
-    console.log(nodes);
+    const old_node = new Map(this.node.data().map(d => [d.val, d]));
+    const old_link = new Map(this.link.data().map(d => [d.source.val+'-'+d.target.val, d] ));
 
+    nodes = nodes.map(d => Object.assign(old_node.get(d.val) || {}, d));
+    links = links.map(d =>Object.assign(old_link.get(d.source+'-'+d.target) || {}, d));
+
+
+    
+    // console.log(nodes,links)
     this.simulation.nodes(nodes);
     this.simulation.force("link").links(links);
     this.simulation.alpha(1).restart();
-
-
-
+    
     this.link=this.link
-      .data(links)
+      .data(links,d => d.source.val+'-'+d.target.val)
       .join('polyline')
       .attr('marker-mid',(d)=>`url(#arrow${d.type?'-primary':''})`)
       .attr('class',(d)=>d.type);
       
-    
+    console.log(
+      nodes.find(a=>a.val=='cancer'),
+      nodes.find(a=>a.val=='genotype')
+      )
     this.node=this.node
-      .data(nodes)
+      .data(nodes,(d)=>d.val)
       .join(enter=>enter.append('circle')
         .attr("r", 3)
         .attr('data-val',(d)=>d.val)
-        .attr('class',(d)=>`node ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
+        .attr('class',(d)=>`node ${d.primary?'primary':''}`)
         .each(function(d){
           if(d.val=='coffee'){
             d.fx=w/3;
@@ -302,13 +325,34 @@ const Force= class {
 
     
     this.label=this.label
-        .data(nodes)
+        .data(nodes,(d)=>d.val)
         .join(enter=>enter.append('text')
-          .attr('class',(d)=>`noselect ${d.val=='coffee'||d.val=='cancer'?'primary':''}`)
+          .attr('class',(d)=>`noselect ${d.primary?'primary':''} ${d.type?'has-type':''}`)
+          .attr('data-val',(d)=>d.val)
           .text((d)=>d.val)
           .call(this.drag(this.simulation))
+          .each(function(d) { d.bbox = this.getBBox(); })
           .on('click',this.clicked.bind(this)))
 
+    
+    this.label_bg=this.label_bg
+      .data(nodes,(d)=>d.val)
+      .join(enter=>enter.append('rect')
+        .style('fill',(d)=>d.type?this.type_colors[d.type]:'none')
+        .style('opacity',0.6)
+        .attr('rx',d => d.bbox.height/2)
+        .attr('ry',d => d.bbox.height/2)
+        .attr('data-type',(d)=>d.type)
+        .attr("width", d => d.bbox.width + 6 * this.x_margin)
+        .attr("height", d => d.bbox.height + 2 * this.y_margin)
+        .call(this.drag(this.simulation))
+      )
+      
+      
+          //   .style("fill", "black")
+          //   .style("opacity", "0.5")
+          
+            
   }
 
   updateSim(setting,value){

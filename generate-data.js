@@ -5,7 +5,7 @@ generate();
 async function generate(){
     let source_data=await generate_from_source();
     // console.log(source_data)
-    fs.writeFile('data/dag-data.json', JSON.stringify({
+    fs.writeFile('data/dag-link-data.json', JSON.stringify({
         // nodes:source_data.nodes,
         nodes_separated:source_data.nodes_separated,
         links:source_data.links

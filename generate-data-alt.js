@@ -4,10 +4,16 @@ const fs   = require('fs');
 let primary_nodes=["coffee","cancer"];
 
 
+// let gpt_categories={
+//     treatment:["aspirin", "prostate biopsy", "Kallikrein related peptidase 3", "pathology grading", "metformin", "calcium supplement", "Insulin-like growth factor binding protein 2", "non-steroidal anti-inflammatory drug", "calcium channel blocker", "slow acetylator", "finasteride", "high grade astrocytic tumor", "digital rectal examination", "biopsy", "brachytherapy", "liver transplantation", "adjuvant radiotherapy", "denosumab", "atorvastatin", "colonoscopy", "Internet-based intervention"],
+//     disease:["cancer","type 2 diabetes","Kallikrein related peptidase 3","pathology grading","Koolen de Vries syndrome","xeroderma pigmentosum group D","high grade astrocytic tumor","large intestine cancer","periodontal disease","familial hypercholesterolemia","nodular prostate","multiple sclerosis","choledocholithiasis","acne","systemic lupus erythematosus","arterial hypertension","congestive heart failure","diabetes mellitus","childhood bladder carcinoma","kidney cancer","urethritis"]
+// }
+
 generate();
 
 async function generate(){
     let source_data=await generate_from_source();
+    
     console.log(source_data)
 
     fs.writeFile('data/dag-link-data.json', JSON.stringify(source_data), err => {
@@ -46,19 +52,39 @@ const is_bidirectional_with=(node,n)=>{
 
 
 
-//return link and nodelist, one default and one filled in with real info
+
 async function generate_from_source(){
     let links=await find_this('file','data/worst_case_links.json')
     links=links?JSON.parse(links).links:undefined;
+    let taglist=await find_this('file','data/taglist.json')
+    taglist=JSON.parse(taglist).tags;
+
+
     let nodes_categorized=generate_categorized_nodes(links);
     let links_categorized=generate_categorized_links(nodes_categorized,links);
     let nodes=nodes_categorized.map(a=>{
-        return {val:a.val};
+        return {
+            val:a.val,
+            primary:primary_nodes.includes(a.val),
+            type:find_type(a.val)
+        };
     });
+
+    // console.log(nodes);
     return {
         nodes,
         links_categorized
     };
+
+    function find_type(name){
+        let type=undefined;
+        // console.log(taglist);
+        
+        for(let tag of taglist){
+            type=tag.vals.includes(name)?tag.name:type;
+        }
+        return type;
+    }
     
 }
 
@@ -72,7 +98,8 @@ function generate_categorized_links(nodes,links){
         p0_downstream:[],
         p1_bidirectional:[],
         p1_upstream:[],
-        p1_downstream:[]
+        p1_downstream:[],
+        primary:[{source:primary_nodes[0],target:primary_nodes[1],type:'primary'}]
     }
 
     for(let link of links){
@@ -96,6 +123,7 @@ function generate_categorized_links(nodes,links){
 
         if(not_primary){
             let n=primary_nodes.indexOf(primary.val);
+
             if(is_looping(not_primary)){
                 find_and_add(links_categorized,"loop",not_primary.val,link)
             }else if(is_confounding(not_primary)){
@@ -147,6 +175,8 @@ function generate_categorized_links(nodes,links){
             })
         }
     }
+
+    
 }
 
 

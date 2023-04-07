@@ -1,0 +1,875 @@
+smoking
+coffee
+caffeine
+tobacco smoke pollution
+genotype
+cancer
+microsatellite
+social class
+fatty acid
+isoflavone
+aspirin
+sequence deletion
+allele
+agranulocytes
+eating
+prostate biopsy
+Kallikrein related peptidase 3
+pathology grading
+homozygote
+type 2 diabetes
+racial group
+family history
+vasectomy
+RUNX3
+water consumption
+metformin
+calcium supplement
+Insulin-like growth factor binding protein 2
+Koolen de Vries syndrome
+single-nucleotide polymorphism
+haplotype
+2-phenylchromane flavonoid
+L-serine
+non-steroidal anti-inflammatory drug
+calcium channel blocker
+tea
+inflammation
+human height
+yogurt
+blood serum
+methyl bromide
+chlorinated hydrocarbon
+sedentary lifestyle
+education level
+African continental ancestry group
+euthyroid
+xeroderma pigmentosum group D
+Trichomonas vaginalis
+waist circumference
+waist-hip ratio
+(RS)-tegafur
+nuclear family
+Medicare
+ESR1
+finasteride
+Aa
+insulin resistance
+dietary supplement
+prostatic hypertrophy
+doconexent
+high grade astrocytic tumor
+blood plasma
+vaginal intercourse
+cigarette smoking
+disease progression
+bread
+prostatectomy
+coronary artery disease
+deletion mutation
+NFKB1
+data warehouse
+slow acetylator
+syphilis
+sexual partner
+meat
+indole 2,3-dioxygenase
+XRCC1
+BRCA2
+dose hypofractionation
+genetic polymorphism
+forestry
+job
+coal industry
+vegetable
+body mass index
+food
+margarine
+sunlight
+anti-diabetic medication
+dairy product
+vitamin D
+alpha-tocopherol
+large intestine cancer
+digital rectal examination
+medical history
+mutation
+recessive genes
+TLR3
+placebo
+serum total cholesterol level
+DUSP1
+MAPK8
+pork meat
+economics
+red meat
+Chlamydia trachomatis
+Human herpesvirus 7
+testosterone
+motor activity
+family characteristics
+alpha-linolenic acid
+Mediterranean diet
+alcohol consumption
+age of a person
+biopsy
+rectal examination
+brain cancer
+leukemia
+IL6
+adiponectin
+Citrus
+cryptoxanthin
+obesity
+overweight
+relative risk
+periodontal disease
+population group
+large-core needle biopsy
+cyst
+sibling
+NAT2
+sleep
+white blood cell count
+metabolic syndrome
+muscle strength
+forehead
+drinking
+tobacco smoking
+familial hypercholesterolemia
+low-density lipoprotein
+brachytherapy
+NFKBIA
+firefighter
+MTHFR
+liver transplantation
+elasticity imaging techniques
+serum triglyceride level
+prostatitis
+case-control study
+population density
+income tax
+integrin alpha chain
+African Americans
+mass screening
+diagnostic screening programs
+calcium carbonate
+vegan
+vegetarian
+confidence interval
+lead
+arsenic
+nickel
+cadmium
+selenium
+magnetic-resonance imaging
+lignan
+genistein
+cyanocobalamin
+statin
+gene expression
+drink
+insulin-like growth factor I
+osteopenia
+adjuvant radiotherapy
+tetrachloroethylene
+nodular prostate
+family
+RAD51
+Cytochrome P450 1B1
+energy intake
+Mucin-16
+tetracycline antibiotic
+lutein
+CYP19A1
+chromosome breakage
+agriculture
+athlete
+BRCA1 DNA repair associated
+SP6
+alpha-tocopherylquinone
+Vaccinia virus
+river
+GPX1
+ferulic acid
+schistosomiasis
+CRY2
+multiple sclerosis
+cholelithiasis
+APC
+glycemic index
+chromosome, telomeric region
+Allium sativum
+Allium cepa
+skin sarcoidosis
+antiretroviral therapy
+denosumab
+BRCA2 DNA repair associated
+CYP2E1
+micronutrients
+pancreatitis
+Insulin-like growth factor II
+MSR1
+acne
+sex hormone binding globulin
+Insulin-like growth factor binding protein 3
+systemic lupus erythematosus
+arterial hypertension
+publication
+interview
+tumor protein p53
+green tea
+diet
+pipe smoking
+missense mutation
+dietary iron
+GSTT1
+serum ionized calcium  level
+β-carotene
+atorvastatin
+colonoscopy
+CASP3
+congestive heart failure
+fiber
+protein
+lycopene
+housing
+chronic heart failure
+angiopoietin-related protein 4
+diabetes mellitus
+childhood bladder carcinoma
+medical equipment
+fruit
+CYP1A1
+GSTM1
+unsaturated fatty acids
+Linoleic Acids
+beer
+food and beverage
+xeroderma pigmentosum group C
+exon
+Internet-based intervention
+kidney cancer
+glycitein
+urethritis
+motor vehicle emissions
+food handling
+serum calcium
+Whites
+gasoline
+methylenetetrahydrofolate reductase
+endoplasmic reticulum stress
+Cyclin-dependent kinase inhibitor 1, vertebrate
+hepatitis b virus hbsag surface protein antigen
+Acute prostatitis
+vasectomy reversal
+time
+glutathione S-transferase, pi class
+sigmoidoscopy
+γ-tocopherol
+L-tyrosine
+creatine
+L-glutamine
+urea
+albumins
+L-histidine
+phenylalanine
+seroepidemiologic studies
+fish
+tanning
+baldness
+untranslated region
+chronic prostatitis
+GC vitamin D binding protein
+smoker
+arthroplasty
+coumestrol
+spironolactone
+male breast neoplasm
+aquaculture
+ship
+sugars
+fasting
+computed tomography
+eye
+sunburn
+quercetin
+snack
+(+)-catechin
+atrophic gastritis
+periodontitis
+signet ring cell adenocarcinoma
+carbamazepin
+Y chromosome
+heterozygotes
+COMT
+dust
+prostatic intraepithelial neoplasia
+Fusobacterium nucleatum
+halogenation
+Cutibacterium acnes
+Crohn's disease
+Cola
+insertional mutagenesis
+Medicaid
+codon
+drinking water
+food industry
+dicofol
+acaricide
+rectal tenesmus
+rectal pain
+carotenoid
+retinol
+olive oil
+folic acid
+genetic operator regions
+prostate
+17β-estradiol
+oxidoreductase
+traffic collision
+terminal repeat sequence
+thiazolidinedione
+history
+vascular endothelial growth factor A
+prostatic infection
+EPX
+atopy
+dicamba
+Hepatitis C virus
+Hispanic and Latino Americans
+green tea extract
+transrectal high-intensity focused ultrasound
+diastolic blood pressure
+XPC
+vulnerable population
+dialysis
+eicosapentaenoic acid
+Nitric oxide synthase 3
+PRKCI
+digit
+IRF6
+omega-3 fatty acid
+sun bathing
+algorithm
+PPARG
+income
+urinary system
+anogenital distance
+TCF21
+PITX2
+index finger
+lesion
+radionuclide imaging
+tandem repeat
+ornithine decarboxylase
+dietary animal proteins
+water softening
+MSH2
+Serpin family E member 1
+Antibiotics, Antitubercular
+transcription factor 7 like 2
+multivariate analysis
+noncommunicable diseases
+bromodichloromethane
+shift work
+darkness
+fasting serum glucose level
+glycemic load
+lymph node
+binge drinking
+calcium
+dietary fats
+chronic pancreatitis
+weight gain
+hair dye
+breast carcinoma
+exposure
+CDX2
+ataxia telangiectasia
+stillbirth
+inheritance pattern
+high-risk pregnancy
+tobacco use
+triglyceride
+transplant recipient
+undocumented immigrant
+birth weight
+antihypertensive drug
+Glycine N-methyltransferase
+cardiovascular disease
+child
+employment opportunities
+immunology
+histaglobulin
+octasulfur
+male
+smoke
+KLK3
+DNA copy number variations
+colectomy
+lymph node metastasis
+vitamin D receptor
+vitamin B6
+Asian Americans
+chronic condition
+Oceanic ancestry group
+spouse
+inflammatory bowel diseases
+Daucus carota
+carcinoembryonic antigen
+TP53
+neoadjuvant therapy
+BTC
+MTOR
+Appalachia
+sotalol
+Triticum
+oral contraceptive
+antibiotic
+IGFBP3
+fat body
+tumor suppressor gene
+sleep disorder
+marker of proliferation Ki-67
+superoxide dismutase
+Matrix metalloproteinase-9
+erythrocyte transfusion
+microRNA
+cow's milk
+soy food
+insulin
+substance-related disorder
+antidepressant
+gondoic acid
+puberty
+nucleic acid sequence
+MPO
+CTBP2
+remedial teaching
+angiotensin receptor antagonists
+CCR7
+asbestos
+flavone
+nitrite ion
+cell cycle checkpoint signaling
+renin–angiotensin system
+laparoscopic surgery
+gonorrheakiki
+dietary fiber
+absolute monocyte count
+ACE inhibitor
+vegan diet
+L-ornithine
+diet therapy
+defecation
+abdominal obesity
+hormone replacement therapy
+calcinosis
+feeding behavior
+dementia
+intercellular signaling peptides and proteins
+DASH diet
+chronic inflammatory response
+sling
+hypopituitarism
+red blood cell count
+dominant genes
+police
+printing
+gas
+nonheme iron proteins
+oil
+laparoscopic cholecystectomy
+villous adenoma
+erectile dysfunction
+hyperglycemia
+MDM2
+methylation
+androgenic alopecia
+butyric acid
+healthy living
+combined modality therapy
+HNF1B
+obstructive sleep apnea
+soot
+CCR5
+textile industry
+pyrene
+estrogen replacement therapy
+(-)-equol
+work
+sanitary engineering
+lymphopenia
+metabolic brain disease
+conservative management
+calcium sensing receptor
+very low birth weight infant
+breast
+sirolimus
+pain
+SOD3
+propranolol
+diverticulum
+weights and measures
+aged
+Alzheimer disease type 1
+Cytochrome P450 family 1 subfamily A member 1
+CCR6
+ethnology
+enzalutamide
+smokeless tobacco
+Western pattern diet
+TEP1
+subcutaneous adipose tissue
+transient and migrant people
+dutasteride
+navigator
+primary sclerosing cholangitis
+invasive breast carcinoma
+Indexing and abstracting service
+erythrocyte index
+omega-6 fatty acid
+aryldialkylphosphatases
+MLH1
+pioglitazone
+set of lymph nodes
+Chromogranin A
+radiation
+serotonin antagonist
+trichloroacetic acid
+bronchodilator
+construction industry
+station
+xeroderma pigmentosum group A
+snoring
+farm
+HIV vaccine
+sugar-sweetened beverage
+military personnel
+social support
+human papillomavirus 16
+marital status
+female organism
+man
+Lysine acetylsalicylate
+VDR
+familial prostate cancer
+prostate carcinoma in situ
+BRAF
+consanguinity
+Parkinson's disease
+preferred walking speed
+travel
+computational biology
+analgesia
+bariatric surgery
+carbohydrate
+physician
+anxiety disorder
+Taq1 Polymorphism
+oxidative stress
+SOD1
+hyperprolactinemia
+Prostaglandin G/H synthase 2
+watchful waiting
+grain
+dietary sodium
+glucocorticoid
+no observable adverse effect level
+geothermal energy
+precocious puberty
+multigene family
+familial adenomatous polyposis
+metronidazole
+ranitidine
+Cricetulus
+prescription drug
+symptom
+egg proteins
+creatinine
+linoleic acid
+functional illiteracy
+chromium
+GSTP1
+epoxide hydrolases
+epigenomics
+communication
+diabetic foot
+hyperlipidemia
+whole grain
+surgery
+sexual dysfunction
+hepatitis viruses
+petroleum
+hemoglobin
+estrogen receptor 1
+apnea
+glutathione S-transferase
+nulliparous
+abortion on request
+adiposity
+research
+prednisone
+bicalutamide
+neuron type
+abiraterone acetate
+cigarette
+potato
+alcoholic beverage
+egg
+pesticide
+THBS1
+food manufacturer
+nitrate
+fertility
+MVP
+glutathione peroxidase
+health insurance
+nutrient
+thromboembolism
+hexachlorobenzene
+chlordane
+ALU element
+Simplexvirus
+cholecystectomy
+acute inflammation
+BMPR2
+workplace
+chromosome 19p13.13 deletion syndrome
+well
+surgical endoscopy
+nutrition policy
+health literacy
+intraabdominal infection
+tibolone
+FTO
+fish product
+benign neoplasm of prostate
+LAPTM5
+RRM1
+urolithiasis
+Native Americans in the United States
+methyl green
+blood group antigen
+Arachidonate 12-lipoxygenase
+milk
+Testicular Hormones
+MIR196A2
+catalase
+SRD5A2
+NF1
+trihalomethane
+germline mutation
+Cannabis
+CHEK2
+multiparametric magnetic resonance imaging
+Hevea
+simvastatin
+IL18
+asthma
+major depressive disorder
+mortality
+attention deficit hyperactivity disorder
+mortality rate
+undernutrition
+ovarian cancer
+colorectal neoplasm
+basal-cell carcinoma
+death certificate
+stomach carcinoma
+liver cirrhosis
+fatty liver disease
+depression
+testicular cancer
+adult primary liver cancer
+endometrial carcinoma
+ovarian carcinoma
+acute myocardial infarction
+esophageal carcinoma
+myocardial infarction
+happiness
+nephroblastoma
+lip and oral cavity carcinoma
+bladder carcinoma
+Alzheimer disease 2
+Urologic chronic pelvic pain syndrome
+nocturia
+small intestine cancer
+pancreatic carcinoma
+deafness
+hyperhomocysteinemia
+blood pressure
+ischemic stroke
+nephrolithiasis
+gestational hypertension
+live birth
+human pregnancy
+bone fracture
+monozygotic twinning
+mental health
+colon carcinoma
+lung carcinoma
+liver cancer
+thyroid carcinoma
+therapeutic failure
+calculus
+alcoholic liver cirrhosis
+alcoholism
+sleep quality
+adenoma
+gout
+length of stay
+laxative
+rare anemia
+sudden cardiac death
+hip fracture
+carcinoma of pharynx
+type 1 diabetes
+glutamic-pyruvic transaminase
+senile cataract
+gestosis
+ovarian epithelial carcinoma
+incomplete abortion
+urinary bladder
+nosebleed
+hepatocellular carcinoma
+chronic liver disease
+chronic progressive multiple sclerosis
+cardiovascular agent
+male reproductive system
+early detection of cancer
+early miscarriage
+cerebrovascular disease
+venous thrombosis
+macular retinal edema
+preterm birth
+kidney
+follicular lymphoma
+gastroesophageal reflux disease
+glaucoma
+prescription drug overuse
+childhood kidney cell carcinoma
+mastodynia
+non-alcoholic fatty liver disease
+open-angle glaucoma
+albuminuria
+breast cancer
+lung
+anal carcinoma
+esophagus adenocarcinoma
+atrophy
+internal jugular phlebectasia
+endothelial dysfunction
+prediabetes syndrome
+myelodysplastic syndrome
+osteoporosis
+subarachnoid hemorrhage
+Fetal Mortality
+adult lymphoma
+lumbar vertebrae
+endometrial cancer
+atrial fibrillation
+acute pancreatitis
+atheroma
+gastric cardia carcinoma
+melanoma
+infant mortality
+nephrosclerosis
+alcoholic liver disease
+intracranial hemorrhage
+multiple pregnancy
+hyperuricemia
+gallbladder carcinoma
+functional gastrointestinal disorder
+kidney failure
+relapse
+glioma
+disease
+serum chloride level
+aortic valve stenosis
+precursor lymphoblastic lymphoma/leukemia
+acute myeloid leukemia
+inpatient care
+ulcerative colitis
+gastric cardia adenocarcinoma
+renal cell carcinoma
+alcoholic hepatitis
+dental attrition
+metastatic prostate carcinoma
+laryngeal carcinoma
+systolic hypertension
+spinal fracture
+non-Hodgkin lymphoma
+childhood acute myeloid leukemia with maturation
+respiratory disease
+leisure activity
+methicillin-resistant Staphylococcus aureus
+squamous cell carcinoma
+nonpapillary renal cell carcinoma
+mild cognitive impairment
+cerebral infarction
+kidney stone
+accidental injuries
+skin melanoma
+hepatitis C virus related hepatocellular carcinoma
+osteoarthritis susceptibility 1
+rare breast tumor
+blood glucose
+rheumatoid arthritis
+awareness
+aspartate transaminase
+men's health
+non-smokers
+survival skill
+metastasis
+Ureaplasma infection
+Mycoplasma
+cognitive dysfunction
+human papilloma virus
+incidence
+spinal cord
+human population
+pathologic processes
+preventive medicine
+Subacute Care
+neutropenia
+pragmatic clinical trial
+Cowden syndrome 1
+exocrine pancreatic insufficiency
+bleeding
+hospital mortality
+Cine Magnetic Resonance Imaging
+pancreatic fistula
+general practitioner
+aggression
+osteonecrosis of the jaw
+health care
+Dual diagnosis
+infection
+suicide
+lung metastasis
+injury
+depressive disorder
+surgical margin
+thorax
+hospital readmission
+Pepper syndrome
+small bowel obstruction
+complication
+peritoneum
+premature termination codon
+distress
+central nervous system agent
+local neoplasm recurrence
+death
+intention
+comorbidity
+vascular dementia
+hyperamylasemia
+anastomotic leak
+prevalence
+urinary incontinence
+psychiatric rehabilitation
+adjuvant chemotherapy
+penile implantation

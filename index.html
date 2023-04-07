@@ -7,22 +7,23 @@
     <link rel="stylesheet" href="css/clearstyle.css">
     <link rel="stylesheet" href="css/style.css">
     <script type="module" src="js/graph.js" charset="utf-8" preload></script>
-    <!-- <script type="module">
-
-      import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-      console.log(d3);
-      start();
-      
-      </script> -->
+ 
     
-    <link rel="preload" href="data/worst_case_links.json" as="fetch" crossOrigin="false">
+    <link rel="preload" href="data/dag-link-data.json" as="fetch" crossOrigin="false">
   </head>
 
   <body>
     <main>
       <div id="controls">
-        <section id="coffee">
-          <h3>Coffee  <input type="checkbox" checked data-name="main"></h3>
+        <section id="p0">
+          <h3>Coffee  
+            <!-- <input type="checkbox" checked data-name="main"> -->
+          </h3>
+          <div class="row-wrap" data-name="bidirectional" data-name="main">
+            <input type="range" name="bidirectional" min="0" max="100" value="50">
+            <label for="bidirectional">bidirectional</label>
+            <span class="count"></span>  
+          </div>
           <div class="row-wrap" data-name="upstream">
             <input type="range" name="upstream" min="0" max="100" value="50">
             <label for="upstream">upstream</label>
@@ -34,8 +35,15 @@
             <span class="count"></span>  
           </div>
         </section>
-        <section id="cancer">
-          <h3>Cancer  <input type="checkbox" checked></h3>
+        <section id="p1">
+          <h3>Cancer  
+            <!-- <input type="checkbox" checked> -->
+          </h3>
+          <div class="row-wrap" data-name="bidirectional" data-name="main">
+            <input type="range" name="bidirectional" min="0" max="100" value="50">
+            <label for="bidirectional">bidirectional</label>
+            <span class="count"></span>  
+          </div>
           <div class="row-wrap" data-name="upstream">
             <input type="range" name="upstream" min="0" max="100" value="50">
             <label for="upstream">upstream</label>
@@ -49,14 +57,19 @@
         </section>
         <section id="intermediate">
           <h3>Intermediate</h3>
-          <div class="row-wrap" data-name="confounders">
-            <input type="range" name="confounders" min="0" max="100" value="50">
-            <label for="confounders">confounders</label>
+          <div class="row-wrap" data-name="loop">
+            <input type="range" name="loop" min="0" max="100" value="50">
+            <label for="loop">feedback loops</label>
             <span class="count"></span>
           </div>
-          <div class="row-wrap" data-name="mediators">
-            <input type="range" name="mediators" min="0" max="100" value="50">
-            <label for="mediators">mediators</label>
+          <div class="row-wrap" data-name="confounding">
+            <input type="range" name="confounding" min="0" max="100" value="50">
+            <label for="confounding">confounding</label>
+            <span class="count"></span>
+          </div>
+          <div class="row-wrap" data-name="mediating">
+            <input type="range" name="mediating" min="0" max="100" value="50">
+            <label for="mediating">mediators</label>
             <span class="count"></span>  
           </div>
         </section>
@@ -72,6 +85,10 @@
             <label for="link">link strength</label>
             <span class="count">2</span>
           </div>
+        </section>
+        <section id="key">
+          <h3>Category highlighting<input type="checkbox"></h3>
+          
         </section>
   
       </div>
