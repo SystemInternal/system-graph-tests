@@ -81,6 +81,8 @@ function init(link_lists,nodes){
       let counter=map[key].field.querySelector('.count');
       range.max=link_lists[key].length;
       range.value=link_lists[key].length;
+      // console.log(link_lists[key].length+']');
+      counter.style.setProperty('--max',`"/${link_lists[key].length+']'}"`);
       counter.innerText=link_lists[key].length;
 
 

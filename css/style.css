@@ -108,7 +108,7 @@ h3{
     content:'[';
 }
 .count::after{
-    content:']';
+    content:var(--max);
 }
 
 
