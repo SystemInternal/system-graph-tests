@@ -166,7 +166,7 @@ function generate_force_input(){
 const Force= class {
   constructor(nodes,links,svg){
 
-    this.x_margin="5";
+    this.x_margin="8";
     this.y_margin="2";
 
     this.type_colors=type_colors
@@ -268,8 +268,8 @@ const Force= class {
       .attr("y", d => d.y );
     
     this.label_bg
-      .attr("x", d => d.x - this.x_margin * (d.primary?2.5:3) )
-      .attr("y", d => d.y - this.y_margin * (d.primary?7:6)  );
+      .attr("x", d => d.x )
+      .attr("y", d => d.y );
 
     this.node
       .attr("cx", d => d.x)
@@ -338,13 +338,14 @@ const Force= class {
     this.label_bg=this.label_bg
       .data(nodes,(d)=>d.val)
       .join(enter=>enter.append('rect')
+        .attr('class',(d)=>d.primary?'primary':'')
         .style('fill',(d)=>d.type?this.type_colors[d.type]:'none')
         .style('opacity',0.6)
-        .attr('rx',d => d.bbox.height/2)
-        .attr('ry',d => d.bbox.height/2)
+        .attr('rx',d => d.bbox.height/1.5)
+        .attr('ry',d => d.bbox.height/1.5)
         .attr('data-type',(d)=>d.type)
-        .attr("width", d => d.bbox.width + 6 * this.x_margin)
-        .attr("height", d => d.bbox.height + 2 * this.y_margin)
+        .attr("width", d => d.bbox.width + this.x_margin*2 + 'px')
+        .attr("height", d => d.bbox.height + this.y_margin*2 + 'px')
         .call(this.drag(this.simulation))
       )
       

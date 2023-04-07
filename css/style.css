@@ -115,18 +115,34 @@ text{
     /* fill:rgba(255,0,0,0.3); */
     paint-order: stroke;
     
-    
+    stroke:var(--bg);
+    stroke-width:2px;
     font-size:13px;
     fill:var(--system-black);
     transform:translate(6px,4px);
     text-transform:capitalize;
-    
+}
+/* 
+.see-categories text{
+    transform:translate(12px,4px);
+} */
+
+rect{
+    transform:translate(8px,-11px);
+}
+rect.primary{
+    transform:translate(8px,-14px);
 }
 
-text:not(text.has-type){
+.see-categories text.has-type{
+    transform:translate(16px,4px);
+    stroke:none;
+}
+
+/* text{
     stroke:var(--bg);
     stroke-width:2px;
-}
+} */
 
 text.primary{
     font-size:16px;
