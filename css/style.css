@@ -45,6 +45,19 @@ main.topic-view[data-viewing="cancer"] #coffee .row-wrap{
 }
 
 
+.focus-p0 #p0 input[type="checkbox"],.focus-p1 #p1 input[type="checkbox"]{
+    display:none;
+}
+
+.focus-p0 #p1>*:not(h3),.focus-p1 #p0>*:not(h3){
+    display:none;
+}
+
+.focus-p0 #intermediate,.focus-p1 #intermediate{
+    display:none;
+}
+
+
 #graph{
     position:absolute;
     top:20px;

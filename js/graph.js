@@ -7,14 +7,27 @@ let graph_svg=document.querySelector('#graph');
 let w=window.innerWidth;
 let h=window.innerHeight;
 
-let primary_nodes=["coffee","cancer"];
+let categories_visible=false;
+
+// let primary_nodes={
+//   p0:true,
+//   p1:true
+// }
+let primary_node_str={p0:"coffee",p1:"cancer"};
+
+let intermediary_str=['loop','mediating','confounding'];
+
+
+
+
 
 let type_colors={
-  disease:'#FEB3FF',
-  treatment:'#7EF5CB',
-  genetic:'#FFFF00',
-  behavior:'#FFA07A',
-  symptom:'#cba1ff'
+  disease:{color:'#FEB3FF',checked:true},
+  treatment:{color:'#7EF5CB',checked:true},
+  genetic:{color:'#FFFF00',checked:true},
+  behavior:{color:'#FFA07A',checked:true},
+  symptom:{color:'#cba1ff',checked:true},
+  other:{color:'black',checked:true}
 }
 
 let map={};
@@ -49,7 +62,6 @@ fetch('data/dag-link-data.json')
  
     init(link_lists,nodes);
     force_input=generate_force_input();
-
     force=new Force(force_input.nodes,force_input.links,graph_svg);
 
 });
@@ -89,24 +101,63 @@ function init(link_lists,nodes){
   }
 
   let key_section=document.querySelector('#key')
-  console.log(Object.entries(type_colors));
   for(let [type,color] of Object.entries(type_colors)){
     let row=document.createElement('div')
     let swatch=document.createElement('div');
     let text=document.createElement('span');
+    let checkbox=document.createElement('input')
+    checkbox.setAttribute('type','checkbox');
+    checkbox.checked=true;
+    checkbox.addEventListener('change',function(){
+      type_colors[type].checked=checkbox.checked;
+      force_input=generate_force_input();
+      force.update(force_input.nodes,force_input.links)
+    
+    })
     
     row.classList.add('row-wrap')
     row.classList.add('color')
-    row.style.setProperty('--color',color)
+    row.style.setProperty('--color',color.color)
     text.innerText=type;
     swatch.classList.add('swatch')
+    row.appendChild(checkbox)
     row.appendChild(swatch)
     row.appendChild(text);
     key_section.appendChild(row);
   }
   key_section.querySelector('input[type="checkbox').addEventListener('click',function(){
+    categories_visible=key_section.querySelector('input[type="checkbox').checked;
     if(key_section.querySelector('input[type="checkbox').checked) main.classList.add('see-categories')
     else  main.classList.remove('see-categories')
+
+    force_input=generate_force_input();
+    force.update(force_input.nodes,force_input.links);
+  })
+
+  document.querySelectorAll('input.primary').forEach((checkbox)=>{
+    checkbox.addEventListener('click',function(){
+      for(let key of keys){
+        if(checkbox.checked&& (key.includes(checkbox.dataset.name)||intermediary_str.includes(key))){
+          map[key].count=link_lists[key].length;
+          map[key].field.querySelector('input').value=link_lists[key].length;
+          map[key].field.querySelector('.count').innerText=link_lists[key].length;
+        }else if(key.includes(checkbox.dataset.name)||intermediary_str.includes(key)){
+          map[key].count=0;
+          map[key].field.querySelector('input').value=0;
+          map[key].field.querySelector('.count').innerText=0;
+          
+        }
+      }
+
+      let other_one=checkbox.dataset.name=='p0'?'p1':'p0';
+      map.primary.count=checkbox.checked?1:0;
+      if(checkbox.checked) main.classList.remove('focus-'+other_one);
+      else main.classList.add('focus-'+other_one);
+
+      force_input=generate_force_input();
+      force.update(force_input.nodes,force_input.links)
+
+    })
   })
 
 
@@ -126,7 +177,6 @@ function init(link_lists,nodes){
 
 function generate_force_input(){
 
-  // let nodes=[];
   //slice each array according to the map count for it
   //combine all arrays into a composite
   let links=[];
@@ -148,10 +198,30 @@ function generate_force_input(){
   let nodes_relevant=nodes.filter(node=>{
     return links.find(a=>{
       return a.source==node.val||a.target==node.val;
-    })||node.primary;
+    })||node.primary&&map.primary.count>0;
   })
 
-  
+  if(categories_visible){
+    nodes_relevant=nodes_relevant.filter(node=>{
+      if(node.type){
+        return type_colors[node.type].checked||node.primary;
+      }else{
+        return type_colors.other.checked||node.primary;
+      }
+    })
+
+    links=links.filter(link=>{
+      return nodes_relevant.find(node=>node.val==link.source)&&nodes_relevant.find(node=>node.val==link.target)
+    })
+  }
+
+  let additional_node_checks=(node)=>{
+    // let relation_view=primary_nodes.p0&&primary_nodes.p1;
+    
+  }
+
+ 
+
   return {
     nodes:nodes_relevant,
     links:links
@@ -279,7 +349,6 @@ const Force= class {
   update(nodes,links){
     // Make a shallow copy to protect against mutation, while
     // recycling old nodes to preserve position and velocity.
-    console.log(nodes.find(a=>a.val=='cancer'))
 
     const old_node = new Map(this.node.data().map(d => [d.val, d]));
     const old_link = new Map(this.link.data().map(d => [d.source.val+'-'+d.target.val, d] ));
@@ -299,11 +368,7 @@ const Force= class {
       .join('polyline')
       .attr('marker-mid',(d)=>`url(#arrow${d.type?'-primary':''})`)
       .attr('class',(d)=>d.type);
-      
-    console.log(
-      nodes.find(a=>a.val=='cancer'),
-      nodes.find(a=>a.val=='genotype')
-      )
+
     this.node=this.node
       .data(nodes,(d)=>d.val)
       .join(enter=>enter.append('circle')
@@ -312,11 +377,11 @@ const Force= class {
         .attr('class',(d)=>`node ${d.primary?'primary':''}`)
         .each(function(d){
           if(d.val=='coffee'){
-            d.fx=w/3;
-            d.fy=h/3;
+            d.fx=w/4;
+            d.fy=h/4;
           }else if(d.val=='cancer'){
-            d.fx=w/3*2;
-            d.fy=h/3*2;
+            d.fx=w/4*3;
+            d.fy=h/4*3;
           }
         })
         .call(this.drag(this.simulation))
@@ -339,7 +404,7 @@ const Force= class {
       .data(nodes,(d)=>d.val)
       .join(enter=>enter.append('rect')
         .attr('class',(d)=>d.primary?'primary':'')
-        .style('fill',(d)=>d.type?this.type_colors[d.type]:'none')
+        .style('fill',(d)=>d.type?this.type_colors[d.type].color:'none')
         .style('opacity',0.6)
         .attr('rx',d => d.bbox.height/1.5)
         .attr('ry',d => d.bbox.height/1.5)
