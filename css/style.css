@@ -3,6 +3,12 @@
     --system-black-30:#C3C3C3;
     --bg:#F5F5F5;
     --sidebar:340px;
+
+    --cat-disease:#FEB3FF;
+    --cat-treatment:#7EF5CB;
+    --cat-genetic:#FFFF00;
+    --cat-behavior:#FFA07A;
+    --cat-symptom:#cba1ff;
 }
 
 main{
@@ -82,6 +88,22 @@ section{
     flex-flow:row nowrap;
     align-items: center;
 }
+
+.row-wrap[data-type="other"] span{
+    display:inline-flex;
+    flex-flow:row nowrap;
+    align-items: center;
+}
+
+.row-wrap[data-type="other"] span::before{
+    display:inline-block;
+    background-color: black;
+    width:20px;
+    height:20px;
+    margin-right:5px;
+    content:'';
+}
+
 
 h3{
     font-weight:600;

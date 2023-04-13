@@ -9,10 +9,10 @@ let h=window.innerHeight;
 
 let categories_visible=false;
 
-// let primary_nodes={
-//   p0:true,
-//   p1:true
-// }
+let primary_nodes={
+  p0:true,
+  p1:true
+}
 let primary_node_str={p0:"coffee",p1:"cancer"};
 
 let intermediary_str=['loop','mediating','confounding'];
@@ -105,7 +105,10 @@ function init(link_lists,nodes){
   let key_section=document.querySelector('#key')
   for(let [type,color] of Object.entries(type_colors)){
     let row=document.createElement('div')
-    let swatch=document.createElement('div');
+    // let swatch=document.createElement('div');
+    let swatch=document.createElement('input')
+    swatch.setAttribute('type','color')
+    swatch.value=color.color;
     let text=document.createElement('span');
     let checkbox=document.createElement('input')
     checkbox.setAttribute('type','checkbox');
@@ -119,16 +122,25 @@ function init(link_lists,nodes){
     
     row.classList.add('row-wrap')
     row.classList.add('color')
-    row.style.setProperty('--color',color.color)
+    row.style.setProperty('--color',`var(--cat-${type})`)
     text.innerText=type;
-    swatch.classList.add('swatch')
+    
+    
     row.appendChild(checkbox)
-    row.appendChild(swatch)
+    if(type!=='other'){
+      swatch.classList.add('swatch')
+      row.appendChild(swatch)
+      swatch.addEventListener('input',function(){
+        document.documentElement.style.setProperty(`--cat-${type}`,swatch.value);
+      })
+    }else{
+      row.dataset.type=type;
+    }
     row.appendChild(text);
     key_section.appendChild(row);
   }
-  key_section.querySelector('input[type="checkbox').addEventListener('click',function(){
-    categories_visible=key_section.querySelector('input[type="checkbox').checked;
+  key_section.querySelector('input[type="checkbox"]').addEventListener('click',function(){
+    categories_visible=key_section.querySelector('input[type="checkbox"]').checked;
     if(key_section.querySelector('input[type="checkbox').checked) main.classList.add('see-categories')
     else  main.classList.remove('see-categories')
 
@@ -139,18 +151,19 @@ function init(link_lists,nodes){
   document.querySelectorAll('input.primary').forEach((checkbox)=>{
     checkbox.addEventListener('click',function(){
       for(let key of keys){
-        if(checkbox.checked&& (key.includes(checkbox.dataset.name)||intermediary_str.includes(key))){
+        if(checkbox.checked&& (key.includes(checkbox.dataset.name) || intermediary_str.includes(key) )){
           map[key].count=link_lists[key].length;
           map[key].field.querySelector('input').value=link_lists[key].length;
           map[key].field.querySelector('.count').innerText=link_lists[key].length;
-        }else if(key.includes(checkbox.dataset.name)||intermediary_str.includes(key)){
+          
+        }else if(key.includes(checkbox.dataset.name) || intermediary_str.includes(key) ){
           map[key].count=0;
           map[key].field.querySelector('input').value=0;
           map[key].field.querySelector('.count').innerText=0;
           
         }
       }
-
+      primary_nodes[checkbox.dataset.name]=checkbox.checked;
       let other_one=checkbox.dataset.name=='p0'?'p1':'p0';
       map.primary.count=checkbox.checked?1:0;
       if(checkbox.checked) main.classList.remove('focus-'+other_one);
@@ -190,6 +203,10 @@ function generate_force_input(){
         let group=list[i]
         addition=addition.concat(group.links)
       }
+      // if(map.primary.count==0&&intermediary_str.includes(key)){
+      //   let hide_str=primary_nodes.p0?primary_node_str.p1:primary_node_str.p0;
+      //   addition=addition.filter(link=>link.source!==hide_str&&link.target!==hide_str);
+      // } 
     }else{
       addition=list.slice(0,map[key].count);
     }
@@ -406,7 +423,7 @@ const Force= class {
       .data(nodes,(d)=>d.val)
       .join(enter=>enter.append('rect')
         .attr('class',(d)=>d.primary?'primary':'')
-        .style('fill',(d)=>d.type?this.type_colors[d.type].color:'none')
+        .style('fill',(d)=>d.type?`var(--cat-${d.type})`:'none')
         .style('opacity',0.6)
         .attr('rx',d => d.bbox.height/1.5)
         .attr('ry',d => d.bbox.height/1.5)
