@@ -26,8 +26,6 @@ async function generate(){
 }
 
 
-//props should be read as "has as",
-//e.g. "p0_target" - > "this node has p0 as one of its targets"
 
 //node checks:
 const is_looping=(node)=>{
@@ -66,7 +64,12 @@ async function generate_from_source(){
         return {
             val:a.val,
             primary:primary_nodes.includes(a.val),
-            type:find_type(a.val)
+            type:find_type(a.val),
+            feedback:is_looping(a) || false,
+            confounder:is_confounding(a) || false,
+            mediator:is_mediating(a) || false,
+            upstream_p0:is_upstream_of(a,0)||is_bidirectional_with(a,0) || false,
+            downstream_p1:is_downstream_of(a,1)||is_bidirectional_with(a,1) || false
         };
     });
 
@@ -147,17 +150,7 @@ function generate_categorized_links(nodes,links){
         }
 
     }
-    // links_categorized={
-    //     loop:links_categorized.loop.map(a=>a.links),
-    //     confounding:links_categorized.confounding.map(a=>a.links),
-    //     mediating:links_categorized.mediating.map(a=>a.links),
-    //     p0_bidirectional:links_categorized.p0_bidirectional.map(a=>a.links),
-    //     p0_upstream:links_categorized.p0_upstream,
-    //     p0_downstream:links_categorized.p0_downstream,
-    //     p1_bidirectional:links_categorized.p1_bidirectional.map(a=>a.links),
-    //     p1_upstream:links_categorized.p1_upstream,
-    //     p1_downstream:links_categorized.p1_downstream
-    // }
+
     return links_categorized;
 
 

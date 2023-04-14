@@ -1,4 +1,4 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+// import * as d3 from "d3.js";
 
 
 let main=document.querySelector('main');
@@ -62,6 +62,7 @@ fetch('data/dag-link-data.json')
  
     init(link_lists,nodes);
     force_input=generate_force_input();
+    console.log(force_input)
     force=new Force(force_input.nodes,force_input.links,graph_svg);
 
 });
@@ -266,14 +267,26 @@ const Force= class {
     this.forceNode.strength(-2000);
     this.forceLink = d3.forceLink().id(d=>d.val);
     this.forceLink.strength(2);
+    this.forceCollide=d3.forceCollide(5)
     this.forceLink.distance(()=>{ return 140; });
+    this.downstream_p1=this.isolate(d3.forceX(w*0.9), function(d) {
+      return d.downstream_p1; 
+    }).strength(0.8);
+    this.upstream_p0=this.isolate(d3.forceX(w*0.1), function(d) {
+      return d.upstream_p0; 
+    }).strength(0.8);
+    // this.forcePush=d3.forceX(w*2)
+    // this.forcePush.strength(0.8)
+
 
     this.simulation = d3.forceSimulation()
       .force("link", this.forceLink)
       .force("charge", this.forceNode)
-      .force("x", d3.forceX())
-      .force("y", d3.forceY())
+      .force("collide",this.forceCollide)
+      .force("upstream_p0",this.upstream_p0)
+      .force("downstream_p1",this.downstream_p1)
       .on("tick", this.ticked.bind(this));
+      
     
     
     //initiate groups for graph elements -----------------
@@ -375,7 +388,6 @@ const Force= class {
     nodes = nodes.map(d => Object.assign(old_node.get(d.val) || {}, d));
     links = links.map(d =>Object.assign(old_link.get(d.source+'-'+d.target) || {}, d));
 
-
     
     // console.log(nodes,links)
     this.simulation.nodes(nodes);
@@ -443,6 +455,15 @@ const Force= class {
   updateSim(setting,value){
     this.simulation.force(setting).strength(value);
     this.simulation.alpha(1).restart();
+  }
+
+  isolate(force, filter) {
+    let initialize = force.initialize;
+
+    force.initialize=(nodes)=>{
+      return initialize.call(force, nodes.filter(filter)); 
+    }
+    return force;
   }
 
 
