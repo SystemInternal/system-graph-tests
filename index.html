@@ -76,16 +76,23 @@
         </section>
         <section id="graph-settings">
           <h3>Graph settings</h3>
+          
           <div class="row-wrap" data-name="charge">
             <input type="range" name="charge" min="-5000" max="0" value="-2000" step="100">
             <label for="charge">node strength</label>
             <span class="count" style="--max:']';">-2000</span>  
+          </div>
+          <div class="row-wrap" data-name="radius">
+            <input type="range" name="radius" min="0" max="50" value="10" step="1">
+            <label for="radius">node radius</label>
+            <span class="count" style="--max:']';">10</span>
           </div>
           <div class="row-wrap" data-name="link">
             <input type="range" name="link" min="0" max="3" value="2" step="0.1">
             <label for="link">link strength</label>
             <span class="count" style="--max:']';">2</span>
           </div>
+          
         </section>
         <section id="key">
           <h3>Categories<input type="checkbox"></h3>

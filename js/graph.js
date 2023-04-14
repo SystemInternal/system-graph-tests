@@ -267,7 +267,7 @@ const Force= class {
     this.forceNode.strength(-2000);
     this.forceLink = d3.forceLink().id(d=>d.val);
     this.forceLink.strength(2);
-    this.forceCollide=d3.forceCollide(5)
+    this.forceCollide=d3.forceCollide(10)
     this.forceLink.distance(()=>{ return 140; });
     this.downstream_p1=this.isolate(d3.forceX(w*0.9), function(d) {
       return d.downstream_p1; 
@@ -436,7 +436,7 @@ const Force= class {
       .join(enter=>enter.append('rect')
         .attr('class',(d)=>d.primary?'primary':'')
         .style('fill',(d)=>d.type?`var(--cat-${d.type})`:'none')
-        .style('opacity',0.6)
+        .style('opacity',1)
         .attr('rx',d => d.bbox.height/1.5)
         .attr('ry',d => d.bbox.height/1.5)
         .attr('data-type',(d)=>d.type)
@@ -453,8 +453,15 @@ const Force= class {
   }
 
   updateSim(setting,value){
-    this.simulation.force(setting).strength(value);
-    this.simulation.alpha(1).restart();
+    switch(setting){
+      case 'radius':
+        this.simulation.force('collide').radius(value)
+      break;
+      default:
+        this.simulation.force(setting).strength(value);
+    }
+    this.simulation.alpha(0.8).restart();
+    
   }
 
   isolate(force, filter) {
