@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>system graph tester</title>
+    <meta http-equiv="Content-Type" content="text/html;" charset="utf-8" >
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/clearstyle.css">
+    <link rel="stylesheet" href="../css/topological.css">
+    <script type="module" src="../js/d3.js" charset="utf-8" preload></script>
+    <script type="module" src="../js/topological.js" charset="utf-8" preload></script>
+ 
+    
+    <link rel="preload" href="../data/dag-link-data.json" as="fetch" crossOrigin="false">
+  </head>
+
+  <body>
+    <main>
+      <div id="controls">
+        <section id="p0">
+          <h3>Coffee  
+            <input type="checkbox" checked data-name="p0" class="primary">
+          </h3>
+          <div class="row-wrap" data-name="bidirectional">
+            <input type="range" name="bidirectional" min="0" max="100" value="50">
+            <label for="bidirectional">bidirectional</label>
+            <span class="count"></span>  
+          </div>
+          <div class="row-wrap" data-name="upstream">
+            <input type="range" name="upstream" min="0" max="100" value="50">
+            <label for="upstream">upstream</label>
+            <span class="count"></span>
+          </div>
+          <div class="row-wrap" data-name="downstream">
+            <input type="range" name="downstream" min="0" max="100" value="50">
+            <label for="downstream">downstream</label>
+            <span class="count"></span>  
+          </div>
+        </section>
+        <section id="p1">
+          <h3>Cancer
+            <input type="checkbox" checked data-name="p1" class="primary">
+          </h3>
+          <div class="row-wrap" data-name="bidirectional">
+            <input type="range" name="bidirectional" min="0" max="100" value="50">
+            <label for="bidirectional">bidirectional</label>
+            <span class="count"></span>  
+          </div>
+          <div class="row-wrap" data-name="upstream">
+            <input type="range" name="upstream" min="0" max="100" value="50">
+            <label for="upstream">upstream</label>
+            <span class="count"></span>
+          </div>
+          <div class="row-wrap" data-name="downstream">
+            <input type="range" name="downstream" min="0" max="100" value="50">
+            <label for="downstream">downstream</label>
+            <span class="count"></span>  
+          </div>
+        </section>
+        <section id="intermediate">
+          <h3>Intermediate</h3>
+          <div class="row-wrap" data-name="loop">
+            <input type="range" name="loop" min="0" max="100" value="50">
+            <label for="loop">feedback loops</label>
+            <span class="count"></span>
+          </div>
+          <div class="row-wrap" data-name="confounding">
+            <input type="range" name="confounding" min="0" max="100" value="50">
+            <label for="confounding">confounding</label>
+            <span class="count"></span>
+          </div>
+          <div class="row-wrap" data-name="mediating">
+            <input type="range" name="mediating" min="0" max="100" value="50">
+            <label for="mediating">mediators</label>
+            <span class="count"></span>  
+          </div>
+        </section>
+        <section id="key">
+          <h3>Categories<input type="checkbox"></h3>
+          
+        </section>
+  
+      </div>
+      <svg id="graph">
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 6 10"
+            refX="-5"
+            refY="5"
+            markerWidth="12"
+            markerHeight="12"
+            markerUnits="userSpaceOnUse"
+            orient="auto-start-reverse">
+            <path d="M0.950256 1L2.95026 3L4.95026 5L0.950256 9" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+            <!-- <path d="M 0 0 L 10 5 L 0 10 z" /> -->
+          </marker>
+          <marker
+            id="arrow-primary"
+            viewBox="0 0 6 10"
+            refX="-10"
+            refY="5"
+            markerWidth="12"
+            markerHeight="12"
+            markerUnits="userSpaceOnUse"
+            orient="auto-start-reverse">
+            <path d="M0.950256 1L2.95026 3L4.95026 5L0.950256 9" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+            <!-- <path d="M 0 0 L 10 5 L 0 10 z" /> -->
+          </marker>
+        </defs>
+  
+  
+  
+      </svg>
+
+
+    </main>
+    
+      
+    
+  </body>
+  
+</html>

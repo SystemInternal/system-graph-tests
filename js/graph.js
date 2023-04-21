@@ -256,8 +256,8 @@ function generate_force_input(){
 const Force= class {
   constructor(nodes,links,svg){
 
-    this.x_margin="8";
-    this.y_margin="2";
+    this.x_margin="6";
+    this.y_margin="0";
 
     this.type_colors=type_colors
 
@@ -437,8 +437,8 @@ const Force= class {
         .attr('class',(d)=>d.primary?'primary':'')
         .style('fill',(d)=>d.type?`var(--cat-${d.type})`:'none')
         .style('opacity',1)
-        .attr('rx',d => d.bbox.height/1.5)
-        .attr('ry',d => d.bbox.height/1.5)
+        .attr('rx',d => d.bbox.height/2)
+        .attr('ry',d => d.bbox.height/2)
         .attr('data-type',(d)=>d.type)
         .attr("width", d => d.bbox.width + this.x_margin*2 + 'px')
         .attr("height", d => d.bbox.height + this.y_margin*2 + 'px')
