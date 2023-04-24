@@ -38,6 +38,11 @@ main{
 
 /* control panel ---------------- */
 
+
+#p0 input[type="checkbox"], #p1 input[type="checkbox"]{
+    display:none;
+}
+
 main.topic-view input:checked{
     opacity:0.5;
     pointer-events: none;
