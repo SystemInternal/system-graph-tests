@@ -93,6 +93,14 @@ section{
     content:'';
 }
 
+#p0 .row-wrap[data-name="downstream"]{
+    display:none;
+}
+
+#p1 .row-wrap[data-name="upstream"]{
+    display:none;
+}
+
 h3{
     font-weight:600;
     margin-bottom:5px;
@@ -147,6 +155,20 @@ h3{
     top:20px;
     right:20px;
     background-color: var(--bg);
+    
+}
+
+#graph,#graph text.noselect,.labels.noselect text{
+    cursor:grab;
+}
+
+#graph.drag,#graph.drag text.noselect,#graph.drag .labels.noselect text{
+    cursor:grabbing;
+}
+
+
+#graph g{
+    transform:translate(var(--drag-x),var(--drag-y))
 }
 
 #graph g{
@@ -155,6 +177,7 @@ h3{
 #graph g.link-lines,#graph g.node-label-bgs{
     z-index:5;
 }
+
 
 
 
@@ -191,6 +214,11 @@ text.primary{
     font-size:16px;
     font-weight:600;
 }
+text.label{
+    /* font-weight:600; */
+    transform:translate(-6px,2px);
+    opacity:0.8;
+}
 
 
 
@@ -212,10 +240,29 @@ circle{
 
 
 
-line,polyline{
+line,polyline,path{
+    fill:none;
     stroke:var(--system-black-30);
 }
 
+
+.link-arrows{
+    display:none;
+    /* transform-origin:center; */
+    /* transform:translate(-2px,-4px); */
+}
+
+#graph[data-directionality="arrows"] .link-arrows{
+    display:block;
+}
+
+.animate{
+    display:none;
+}
+
+#graph[data-directionality="motion"] .animate{
+    display:block;
+}
 
 marker{
     fill:none;
@@ -230,24 +277,29 @@ marker{
 
 
 
-line.primary,polyline.primary{
+line.primary,polyline.primary,path.primary{
     stroke:var(--system-black);
     stroke-width:2px;
 }
 
-.animate line,.animate polyline{
-    stroke:var(--system-black);
-    opacity:0;
+
+
+
+
+
+.animate line,.animate polyline,.animate path{
+    stroke:salmon;
+    opacity:0.2;
     stroke-width:4px;
     stroke-linecap: round;
    
-    --gap:30;
-    /* animation: directionality 2s linear infinite forwards;
+    --gap:60;
+    animation: directionality 2s linear infinite forwards;
     stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
-    stroke-dashoffset:var(--str); */
+    stroke-dashoffset:var(--str);
 }
 
-.animate line.primary,.animate polyline.primary{
+.animate line.primary,.animate polyline.primary,.animate path.primary{
     opacity:0.2;
     stroke-width:8px;
 }
