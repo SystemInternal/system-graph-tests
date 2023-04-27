@@ -152,6 +152,10 @@ h3{
 }
 
 
+select{
+    margin-bottom:5px;
+}
+
 
 /* graph ---------------- */
 
@@ -162,6 +166,7 @@ h3{
     background-color: var(--bg);
     
 }
+
 
 #graph,#graph text.noselect,.labels.noselect text{
     cursor:grab;
@@ -287,22 +292,31 @@ line.primary,polyline.primary,path.primary{
     stroke-width:2px;
 }
 
-
+#graph[data-sign="dashed"] .link-lines :where(line.negative,polyline.negative,path.negative){
+    stroke-dasharray:5px 5px;
+}
 
 
 
 
 .animate line,.animate polyline,.animate path{
-    stroke:salmon;
+
+    --col:salmon;
+    stroke:var(--col);
     opacity:0.2;
     stroke-width:4px;
     stroke-linecap: round;
    
-    --gap:60;
+    --gap:60px;
     animation: directionality 2s linear infinite forwards;
     stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
     stroke-dashoffset:var(--str);
 }
+
+#graph[data-sign="motion-color"] .animate :where(line.negative,polyline.negative,path.negative){
+    --col:slateblue;
+}
+
 
 .animate line.primary,.animate polyline.primary,.animate path.primary{
     opacity:0.2;

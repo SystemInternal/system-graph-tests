@@ -150,9 +150,15 @@ function init(link_lists, nodes) {
     graph.update(graph_input.nodes, graph_input.links);
   })
 
-  let directionality_input=document.querySelector('select[name="directionality"');
-  directionality_input.addEventListener('change',function(){
-    graph_svg.dataset.directionality=directionality_input.value;
+  // let directionality_input=document.querySelector('select[name="directionality"');
+  // directionality_input.addEventListener('change',function(){
+  //   graph_svg.dataset.directionality=directionality_input.value;
+  // })
+
+  document.querySelector('#graph-settings').querySelectorAll('select').forEach(select=>{
+    select.addEventListener('change',function(){
+      graph_svg.dataset[select.name]=select.value;
+    })
   })
 
   document.querySelectorAll('input.primary').forEach((checkbox) => {
@@ -426,7 +432,7 @@ const Graph = class {
       .data(links, d => d.source + '-' + d.target)
       .join(
         enter => enter.append('path')
-          .attr('class', (d) => d.type)
+          .attr('class', (d) => `${d.type} ${d.sign}`)
           .attr('d', d => {
             let src = this.nodes.find(a => a.val == d.source);
             let trg = this.nodes.find(a => a.val == d.target);
@@ -440,7 +446,7 @@ const Graph = class {
             nodes[i].offsetHeight; /* trigger reflow */
             nodes[i].style.animation = null; 
           })
-          .style('--str',(d,i,nodes)=>nodes[i].getTotalLength()),
+          .style('--str',(d,i,nodes)=>nodes[i].getTotalLength()+'px'),
         update => update
           .attr('d', d => {
             let src = this.nodes.find(a => a.val == d.source);
@@ -455,14 +461,14 @@ const Graph = class {
             nodes[i].offsetHeight; /* trigger reflow */
             nodes[i].style.animation = null; 
           })
-          .style('--str',(d,i,nodes)=>nodes[i].getTotalLength())
+          .style('--str',(d,i,nodes)=>nodes[i].getTotalLength()+'px')
       )
 
     this.link = this.link
       .data(links, d => d.source + '-' + d.target)
       .join(
         enter => enter.append('path')
-          .attr('class', (d) => d.type)
+          .attr('class', (d) => `${d.type} ${d.sign}` )
           .attr('id',d=>d.source + '-' + d.target)
           .attr('d', d => {
             let src = this.nodes.find(a => a.val == d.source);
@@ -529,7 +535,6 @@ const Graph = class {
           .each(function (d) { 
             
             d.bbox = this.getBBox();
-            console.log(d.bbox) 
           })
           .attr("x", d => d.x)
           .attr("y", d => d.y),
@@ -547,7 +552,6 @@ const Graph = class {
           .attr('ry',d => d.bbox.height/2)
           .attr('data-type',(d)=>d.type)
           .attr("width", d =>{
-            console.log(d)
             return d.bbox.width + this.x_margin*2 + 'px'
           })
           .attr("height", d => d.bbox.height + this.y_margin*2 + 'px')

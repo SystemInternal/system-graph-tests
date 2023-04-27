@@ -117,6 +117,9 @@ function generate_categorized_links(nodes,links){
         let primary;
         let not_primary;
 
+        link.sign=Math.random()<=0.7?'positive':'negative';
+
+
         if(primary_nodes.includes(source.val)){
             primary=source;
             if(!primary_nodes.includes(target.val)){
