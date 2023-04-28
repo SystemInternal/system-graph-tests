@@ -9,13 +9,54 @@
     <script type="module" src="js/d3.js" charset="utf-8" preload></script>
     <script type="module" src="js/graph.js" charset="utf-8" preload></script>
  
-    
+    <link rel="preload" href="data/topo-data.json" as="fetch" crossOrigin="false">
     <link rel="preload" href="data/dag-link-data.json" as="fetch" crossOrigin="false">
   </head>
 
   <body>
-    <main>
+    <main data-graph_type="topological">
       <div id="controls">
+        <section id="graph-settings">
+          <h3>
+            <select name="graph_type">
+              <option value="topological">Topological</option>
+              <option value="force">Force</option>
+            </select> graph settings</h3>
+          
+          <div class="row-wrap force-only" data-name="charge">
+            <input type="range" name="charge" min="-5000" max="0" value="-2000" step="100">
+            <label for="charge">node strength</label>
+            <span class="count" style="--max:']';">-2000</span>  
+          </div>
+          <div class="row-wrap force-only" data-name="radius">
+            <input type="range" name="radius" min="0" max="50" value="10" step="1">
+            <label for="radius">node radius</label>
+            <span class="count" style="--max:']';">10</span>
+          </div>
+          <div class="row-wrap force-only" data-name="link">
+            <input type="range" name="link" min="0" max="3" value="2" step="0.1">
+            <label for="link">link strength</label>
+            <span class="count" style="--max:']';">2</span>
+          </div>
+          <div class="row-wrap" data-name="directionality">
+            <label for="directionality">Directionality</label>
+            <select name="directionality">
+              <option value="none">none</option>
+              <option value="arrows">arrows</option>
+              <option value="motion">motion</option>
+            </select>
+          </div>
+          <div class="row-wrap" data-name="sign">
+            <label for="sign">Sign</label>
+            <select name="sign">
+              <option value="none">none</option>
+              <option value="dashed">dashed</option>
+              <option value="motion-color">motion colors</option>
+            </select>
+          </div>
+          
+        </section>
+
         <section id="p0">
           <h3>Coffee  
             <input type="checkbox" checked data-name="p0" class="primary">
@@ -74,33 +115,14 @@
             <span class="count"></span>  
           </div>
         </section>
-        <section id="graph-settings">
-          <h3>Graph settings</h3>
-          
-          <div class="row-wrap" data-name="charge">
-            <input type="range" name="charge" min="-5000" max="0" value="-2000" step="100">
-            <label for="charge">node strength</label>
-            <span class="count" style="--max:']';">-2000</span>  
-          </div>
-          <div class="row-wrap" data-name="radius">
-            <input type="range" name="radius" min="0" max="50" value="10" step="1">
-            <label for="radius">node radius</label>
-            <span class="count" style="--max:']';">10</span>
-          </div>
-          <div class="row-wrap" data-name="link">
-            <input type="range" name="link" min="0" max="3" value="2" step="0.1">
-            <label for="link">link strength</label>
-            <span class="count" style="--max:']';">2</span>
-          </div>
-          
-        </section>
+        
         <section id="key">
           <h3>Categories<input type="checkbox"></h3>
           
         </section>
   
       </div>
-      <svg id="graph">
+      <svg id="graph" data-graph_type="topological">
         <defs>
           <marker
             id="arrow"
@@ -127,7 +149,13 @@
             <!-- <path d="M 0 0 L 10 5 L 0 10 z" /> -->
           </marker>
         </defs>
-  
+        <g class="labels noselect topo-only">
+          <text id="upstream_p0_label" class="label">Upstream</text>
+          <text id="downstream_p1_label" class="label">Downstream</text>
+          <text id="confounder_label" class="label">Confounders</text>
+          <text id="mediator_label" class="label">Mediators</text>
+          <text id="feedback_label" class="label">Feedback loops</text>
+        </g>
   
   
       </svg>

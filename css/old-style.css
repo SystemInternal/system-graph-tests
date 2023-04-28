@@ -1,9 +1,9 @@
-/* overall rules ---------------- */
 :root{
     --system-black:#373737;
     --system-black-30:#C3C3C3;
     --bg:#F5F5F5;
     --sidebar:340px;
+
     --cat-disease:#FEB3FF;
     --cat-treatment:#7EF5CB;
     --cat-genetic:#FFFF00;
@@ -35,58 +35,38 @@ main{
     box-sizing:border-box;
 }
 
-
-/* control panel ---------------- */
-
-
-main[data-graph_type="topological"] :where(#p0 input[type="checkbox"], #p1 input[type="checkbox"]){
-    display:none;
-}
-
-main.topic-view[data-graph_type="force"] input:checked{
+main.topic-view input:checked{
     opacity:0.5;
     pointer-events: none;
 }
 
-main.topic-view[data-viewing="coffee"][data-graph_type="force"] #cancer .row-wrap{
-    pointer-events: none;
-    opacity:0.5;
-}
 
-main.topic-view[data-viewing="cancer"][data-graph_type="force"] #coffee .row-wrap{
-    pointer-events: none;
-    opacity:0.5;
-}
-
-
-main[data-graph_type="force"] :where(.focus-p0 #p0 input[type="checkbox"],.focus-p1 #p1 input[type="checkbox"]){
+.focus-p0 #p0 input[type="checkbox"],.focus-p1 #p1 input[type="checkbox"]{
     display:none;
 }
 
-main[data-graph_type="force"] :where(.focus-p0 #p1>*:not(h3),.focus-p1 #p0>*:not(h3)){
+.focus-p0 #p1>*:not(h3),.focus-p1 #p0>*:not(h3){
     display:none;
 }
 
-main[data-graph_type="topological"] :where(.focus-p0 #intermediate,.focus-p1 #intermediate){
+.focus-p0 #intermediate,.focus-p1 #intermediate{
     display:none;
 }
 
-.row-wrap.force-only{
-    display:none
+
+#graph{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background-color: var(--bg);
 }
 
-.topo-only{
-    display:none;
+#graph g{
+    z-index:10;
 }
-
-main[data-graph_type="force"] .row-wrap.force-only{
-    display:flex;
-} 
-
-main[data-graph_type="topological"] .topo-only{
-    display:block;
+#graph g.link-lines,#graph g.node-label-bgs{
+    z-index:5;
 }
-
 
 section{
     margin-bottom:10px;
@@ -114,13 +94,9 @@ section{
     content:'';
 }
 
-main[data-graph_type="topological"] #p0 .row-wrap[data-name="downstream"]{
-    display:none;
-}
 
-main[data-graph_type="topological"] #p1 .row-wrap[data-name="upstream"]{
-    display:none;
-}
+
+
 
 h3{
     font-weight:600;
@@ -151,67 +127,14 @@ h3{
 }
 
 
-.row-wrap.color{
-    opacity:0;
-    margin-bottom:2px;
+
+
+
+
+
+#dom{
+    pointer-events: none;
 }
-
-.see-categories .row-wrap.color{
-    opacity:1;
-}
-
-.row-wrap.color .swatch{
-    display:inline-block;
-    width:20px;
-    height:20px;
-    background-color: var(--color);
-}
-
-
-select{
-    margin:2px 0px;
-    font-family:'Monument Grotesk', sans-serif;
-    font-size:13px;
-}
-
-h3 select{
-    margin-right:5px;
-}
-
-
-/* graph ---------------- */
-
-#graph{
-    position:absolute;
-    top:20px;
-    right:20px;
-    background-color: var(--bg);
-    
-}
-
-
-#graph,#graph text.noselect,.labels.noselect text{
-    cursor:grab;
-}
-
-#graph.drag,#graph.drag text.noselect,#graph.drag .labels.noselect text{
-    cursor:grabbing;
-}
-
-
-#graph g{
-    transform:translate(var(--drag-x),var(--drag-y))
-}
-
-#graph g{
-    z-index:10;
-}
-#graph g.link-lines,#graph g.node-label-bgs{
-    z-index:5;
-}
-
-
-
 
 /* #C3C3C3 */
 text{
@@ -228,6 +151,14 @@ text{
     text-transform:capitalize;
 }
 
+select{
+    margin:2px 0px;
+}
+
+/* 
+.see-categories text{
+    transform:translate(12px,4px);
+} */
 
 rect{
     transform:translate(9px,-9px);
@@ -241,18 +172,33 @@ rect.primary{
     stroke:none;
 }
 
+/* text{
+    stroke:var(--bg);
+    stroke-width:2px;
+} */
 
 text.primary{
     font-size:16px;
     font-weight:600;
 }
-text.label{
-    /* font-weight:600; */
-    transform:translate(-6px,2px);
-    opacity:0.8;
+
+
+
+.row-wrap.color{
+    opacity:0;
+    margin-bottom:2px;
 }
 
+.see-categories .row-wrap.color{
+    opacity:1;
+}
 
+.row-wrap.color .swatch{
+    display:inline-block;
+    width:20px;
+    height:20px;
+    background-color: var(--color);
+}
 
 .node-label-bgs{
     opacity:0;
@@ -272,29 +218,10 @@ circle{
 
 
 
-line,polyline,path{
-    fill:none;
+line,polyline{
     stroke:var(--system-black-30);
 }
 
-
-.link-arrows{
-    display:none;
-    /* transform-origin:center; */
-    /* transform:translate(-2px,-4px); */
-}
-
-#graph[data-directionality="arrows"] .link-arrows{
-    display:block;
-}
-
-.animate{
-    display:none;
-}
-
-#graph[data-directionality="motion"] .animate{
-    display:block;
-}
 
 marker{
     fill:none;
@@ -309,38 +236,24 @@ marker{
 
 
 
-line.primary,polyline.primary,path.primary{
+line.primary,polyline.primary{
     stroke:var(--system-black);
     stroke-width:2px;
 }
 
-#graph[data-sign="dashed"] .link-lines :where(line.negative,polyline.negative,path.negative){
-    stroke-dasharray:5px 5px;
-}
-
-
-
-
-.animate line,.animate polyline,.animate path{
-
-    --col:salmon;
-    stroke:var(--col);
-    opacity:0.2;
+.animate line,.animate polyline{
+    stroke:var(--system-black);
+    opacity:0;
     stroke-width:4px;
     stroke-linecap: round;
    
-    --gap:60px;
-    animation: directionality 2s linear infinite forwards;
+    --gap:30;
+    /* animation: directionality 2s linear infinite forwards;
     stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
-    stroke-dashoffset:var(--str);
+    stroke-dashoffset:var(--str); */
 }
 
-#graph[data-sign="motion-color"] .animate :where(line.negative,polyline.negative,path.negative){
-    --col:slateblue;
-}
-
-
-.animate line.primary,.animate polyline.primary,.animate path.primary{
+.animate line.primary,.animate polyline.primary{
     opacity:0.2;
     stroke-width:8px;
 }
