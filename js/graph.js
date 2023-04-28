@@ -227,6 +227,23 @@ function init(link_lists, nodes) {
     })
   })
 
+  document.querySelectorAll('#graph-settings .row-wrap').forEach((field)=>{
+    let range=field.querySelector('input[type="range"]');
+    if(range){
+      let counter=field.querySelector('.count');
+      range.addEventListener('change',function(){
+        if(mode=='force'){
+          counter.innerText=range.value;
+          force.updateSim(field.dataset.name,range.value);
+        }
+        
+      })
+
+    }
+    
+
+  })
+
   document.querySelectorAll('input.primary').forEach((checkbox) => {
     checkbox.addEventListener('click', function () {
       for (let key of keys) {
