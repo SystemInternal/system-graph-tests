@@ -78,7 +78,7 @@ function setSize() {
 }
 
 
-fetch('../data/topo-data.json')
+fetch('data/topo-data.json')
   .then((response) => response.json())
   .then((json) => {
     nodes = json.nodes;
