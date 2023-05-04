@@ -39,7 +39,6 @@ main{
 
 /* control panel ---------------- */
 
-
 main[data-graph_type="topological"] :where(#p0 input[type="checkbox"], #p1 input[type="checkbox"]){
     display:none;
 }
@@ -88,6 +87,20 @@ main[data-graph_type="topological"] .topo-only{
     display:block;
 }
 
+/* .focus-mode g>*{
+    transition:opacity 0.3s;
+} */
+
+.focus-mode g>*:not(.focus){
+    pointer-events:none;
+    /* mix-blend-mode:multiply; */
+    opacity:0.2;
+}
+
+#graph[data-directionality="motion"].focus-mode .animate{
+    display:none;
+}
+
 
 section{
     margin-bottom:10px;
@@ -122,6 +135,23 @@ main[data-graph_type="topological"] #p0 .row-wrap[data-name="downstream"]{
 main[data-graph_type="topological"] #p1 .row-wrap[data-name="upstream"]{
     display:none;
 }
+
+
+
+.hover-link{
+    display:none;
+}
+
+.hover-link path{
+    stroke:transparent;
+    cursor:pointer;
+}
+
+main[data-graph_type="topological"] .hover-link{
+    display:block;
+}
+
+
 
 h3{
     font-weight:600;
@@ -278,6 +308,11 @@ line,polyline,path{
     stroke:var(--system-black-30);
 }
 
+path.hover,path.focus{
+    cursor:pointer;
+    stroke:var(--system-blue);
+    stroke-width:2px;
+}
 
 .link-arrows{
     display:none;

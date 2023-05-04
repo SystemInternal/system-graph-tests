@@ -361,6 +361,15 @@ function set_up_d3(){
       .attr("stroke-linecap", "round")
       .attr("vector-effect", "non-scaling-stroke")
       .selectAll("path")
+    
+    svg.hover_link=svg.box.append('g')
+      .attr('class', 'hover-link')
+      .attr("stroke", "transparent")
+      .attr("stroke-opacity", 1)
+      .attr("stroke-width", 10)
+      .attr("stroke-linecap", "round")
+      .attr("vector-effect", "non-scaling-stroke")
+      .selectAll("path")
 
 
     svg.arrow = svg.box.append('g')
@@ -455,7 +464,7 @@ const Topological = class {
     this.x_margin="6";
     this.y_margin="0";
 
-    
+    this.in_focus=undefined;
 
 
     if(mode=='topological') this.update(nodes, links);
@@ -514,6 +523,60 @@ const Topological = class {
     else if (node.group == 'mediator') return h * 0.7 + node.i * this.spacer;
     else if (node.group == 'feedback') return h * 0.3 - this.heights.feedback + node.i * this.spacer;
     else if (node.group == 'confounder') return h * 0.5 + this.heights.upstream_p0 * 0.5 + (node.i + 2) * this.spacer;
+  }
+
+
+  mouseenter(event,d){
+    let link=svg.link.filter((el)=>el.source==d.source&&el.target==d.target);
+    let arrow=svg.arrow.filter((el)=>el.source==d.source&&el.target==d.target||el.target==d.source&&el.source==d.target);
+    let hover_margin=d3.select(event.srcElement);
+    d3.selectAll('.hover').classed('hover',false);
+    link.classed('hover',true)
+    arrow.classed('hover',true);
+    this.in_focus=d;
+    hover_margin.on('mouseleave',function(){
+      link.classed('hover',false)
+      arrow.classed('hover',false);
+      link.on('mouseleave',null)
+    })
+
+  }
+
+  focus_link(event,d){
+    console.log(d,this.in_focus);
+    let link=svg.link.filter((el)=>el.source==d.source&&el.target==d.target);
+    let arrow=svg.arrow.filter((el)=>el.source==d.source&&el.target==d.target||el.target==d.source&&el.source==d.target);
+    let src_node=svg.node.filter((el)=>el.val==d.source);
+    let trg_node=svg.node.filter((el)=>el.val==d.target);
+    let src_label=svg.label.filter((el)=>el.val==d.source);
+    let trg_label=svg.label.filter((el)=>el.val==d.target);
+    let src_label_bg=svg.label_bg.filter((el)=>el.val==d.source);
+    let trg_label_bg=svg.label_bg.filter((el)=>el.val==d.target);
+
+    let focused=d3.selectAll([...link,...arrow,...src_node,...trg_node,...src_label,...trg_label,...src_label_bg,...trg_label_bg])
+    
+    if(d.source==this.in_focus.source&&d.target==this.in_focus.target){
+      focused.classed('focus',true);
+     
+      box.classed('focus-mode',true);
+
+      setTimeout(function(){
+        let drag=false;
+        box.on('mousedown',()=>{drag=false});
+        box.on('mousemove',()=>{drag=true});
+        box.on('mouseup',function(event){
+          if(!drag&&!d3.select(event.srcElement).classed('focus')){
+            d3.selectAll('.focus').classed('focus',false)
+            box.classed('focus-mode',false);
+            box.on('mouseup',null);
+            box.on('mousemove',null);
+          }
+        })
+
+      },100)
+      
+    }
+ 
   }
 
   update(nodes, links) {
@@ -594,6 +657,8 @@ const Topological = class {
           .style('--str',(d,i,nodes)=>nodes[i].getTotalLength()+'px')
       )
 
+      
+
     svg.link = svg.link
       .data(data.links, d => d.source + '-' + d.target)
       .join(
@@ -607,7 +672,8 @@ const Topological = class {
               source: [src.x, src.y],
               target: [trg.x, trg.y]
             })
-          }).each(function (d,i,nodes) {
+          })
+          .each(function (d,i,nodes) {
             // console.log(d,i,nodes[i])
             d.point=get_halfway_point(nodes[i])
           }),
@@ -625,6 +691,31 @@ const Topological = class {
           })
       )
 
+
+    svg.hover_link=svg.hover_link
+      .data(data.links, d => d.source + '-' + d.target)
+      .join(
+        enter => enter.append('path')
+          .attr('d', d => {
+            let src = this.nodes.find(a => a.val == d.source);
+            let trg = this.nodes.find(a => a.val == d.target);
+            return link_gen({
+              source: [src.x, src.y],
+              target: [trg.x, trg.y]
+            })
+          })
+          .on('click',this.focus_link.bind(this))
+          .on('mouseenter',this.mouseenter.bind(this)),
+        update => update
+          .attr('d', d => {
+            let src = this.nodes.find(a => a.val == d.source);
+            let trg = this.nodes.find(a => a.val == d.target);
+            return link_gen({
+              source: [src.x, src.y],
+              target: [trg.x, trg.y]
+            })
+          })
+      )
 
     svg.arrow = svg.arrow
       .data(data.links, d => d.source + '-' + d.target)
@@ -662,6 +753,9 @@ const Topological = class {
       svg.label_bg
       .on('click',null)
       .on(".drag", null)
+      svg.hover_link
+      .on('click',this.focus_link.bind(this))
+      .on('mouseenter',this.mouseenter.bind(this))
     }
 
 
@@ -907,6 +1001,9 @@ const Force= class {
       svg.label_bg
       .call(this.drag(this.simulation))
       .on('click',this.clicked.bind(this))
+      svg.hover_link
+      .on('click',null)
+      .on('mouseenter',null)
     }
     
     svg.label=svg.label
