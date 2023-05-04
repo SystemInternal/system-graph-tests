@@ -652,7 +652,17 @@ const Topological = class {
 
     
           
-    
+    if(mode_transition){
+      svg.node
+      .on('click',null)
+      .on(".drag", null)
+      svg.label
+      .on('click',null)
+      .on(".drag", null)
+      svg.label_bg
+      .on('click',null)
+      .on(".drag", null)
+    }
 
 
     svg.label = svg.label
@@ -696,7 +706,7 @@ const Topological = class {
 
 
     
-
+      mode_transition=false;
 
   }
 
@@ -758,6 +768,7 @@ const Force= class {
   }
 
   drag(simulation) {
+    
     function dragstarted(event) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
@@ -886,7 +897,17 @@ const Force= class {
           }
         }))
 
-
+    if(mode_transition){
+      svg.node
+      .call(this.drag(this.simulation))
+      .on('click',this.clicked.bind(this))
+      svg.label
+      .call(this.drag(this.simulation))
+      .on('click',this.clicked.bind(this))
+      svg.label_bg
+      .call(this.drag(this.simulation))
+      .on('click',this.clicked.bind(this))
+    }
     
     svg.label=svg.label
         .data(data.nodes,(d)=>d.val)
