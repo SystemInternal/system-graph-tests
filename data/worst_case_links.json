@@ -4291,6 +4291,38 @@
         {
             "source": "confounder 10",
             "target": "cancer"
+        },
+        {
+            "source": "upstream 3",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 4",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 5",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 6",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 7",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 8",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 9",
+            "target": "coffee"
+        },
+        {
+            "source": "upstream 10",
+            "target": "coffee"
         }
     ]
 }

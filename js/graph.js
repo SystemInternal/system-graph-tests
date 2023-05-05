@@ -43,6 +43,30 @@ let mode_transition=false;
 
 
 
+// variable focus
+
+let variables=[
+  {val:'variable A',parent:'source'},
+  {val:'variable B',parent:'source'},
+  {val:'variable C',parent:'source'},
+  {val:'variable D',parent:'source'},
+  {val:'variable E',parent:'source'},
+  {val:'variable 1',parent:'target'},
+  {val:'variable 2',parent:'target'},
+  {val:'variable 3',parent:'target'},
+  {val:'variable 4',parent:'target'},
+]
+
+let variable_links=[
+  {source:'variable A',target:'variable 2'},
+  {source:'variable B',target:'variable 3'},
+  {source:'variable C',target:'variable 1'},
+  {source:'variable D',target:'variable 3'},
+  {source:'variable E',target:'variable 4'}
+]
+
+//--------------------
+
 
 let type_colors = {
   disease: { color: '#FEB3FF', checked: true },
@@ -202,6 +226,7 @@ function init(link_lists, nodes) {
       graph_svg.dataset[select.name]=select.value;
 
       if(select.name=='graph_type'){
+        defocus();
         mode_transition=true;
         if(mode=='topological'){
           mode='force';
@@ -371,6 +396,14 @@ function set_up_d3(){
       .attr("vector-effect", "non-scaling-stroke")
       .selectAll("path")
 
+    svg.v_link = svg.box.append("g")
+      .attr('class', 'variable-links')
+      .attr("stroke", "black")
+      .attr("stroke-opacity", 1)
+      .attr("stroke-width", 1)
+      .attr("stroke-linecap", "round")
+      .attr("vector-effect", "non-scaling-stroke")
+      .selectAll("path")
 
     svg.arrow = svg.box.append('g')
       .attr('class', 'link-arrows')
@@ -398,6 +431,27 @@ function set_up_d3(){
       .append('g')
       .attr('class', 'node-labels')
       .selectAll('text')
+
+
+
+
+    
+
+    svg.v_node=svg.box
+      .append('g')
+      .attr('class', 'variable-circles')
+      .attr("fill", "currentColor")
+      .attr("stroke", "#fff")
+      .attr("stroke-opacity", 1)
+      .attr("stroke-width", 1)
+      .selectAll("circle")
+
+    svg.v_label=svg.box
+      .append('g')
+      .attr('class', 'variable-labels')
+      .selectAll('text')
+    
+    
 }
 
 function generate_graph_input() {
@@ -566,20 +620,19 @@ const Topological = class {
         box.on('mousemove',()=>{drag=true});
         box.on('mouseup',function(event){
           if(!drag&&!d3.select(event.srcElement).classed('focus')){
-            d3.selectAll('.focus').classed('focus',false)
-            box.classed('focus-mode',false);
-            box.on('mouseup',null);
-            box.on('mousemove',null);
+            defocus()
           }
         })
 
       },100)
       
     }
+
+    this.update();
  
   }
 
-  update(nodes, links) {
+  update(nodes=this.nodes, links=this.links) {
 
     refresh_data(nodes,links);
 
@@ -657,7 +710,7 @@ const Topological = class {
           .style('--str',(d,i,nodes)=>nodes[i].getTotalLength()+'px')
       )
 
-      
+    
 
     svg.link = svg.link
       .data(data.links, d => d.source + '-' + d.target)
@@ -756,6 +809,74 @@ const Topological = class {
       svg.hover_link
       .on('click',this.focus_link.bind(this))
       .on('mouseenter',this.mouseenter.bind(this))
+    }
+
+
+    if(this.in_focus!==undefined&&box.classed('focus-mode')){
+
+      let parents={
+        source:this.nodes.find(a => a.val == this.in_focus.source),
+        target:this.nodes.find(a => a.val == this.in_focus.target)
+      }
+      console.log(parents)
+      
+      svg.v_node = svg.v_node
+        .data(variables, (d) => d.val)
+        .join(enter => enter.append('circle')
+          .each((d)=>{
+            d.i=variables.filter(a=>a.parent==d.parent).indexOf(d);
+            d.x=parents[d.parent].x;
+            d.y=parents[d.parent].y + (d.i+1)*this.spacer;
+          })
+          .attr("r", 3)
+          .attr('data-val', (d) => d.val)
+          .attr('data-group', (d) => d.group)
+          .attr('class', (d) => `node ${d.primary ? 'primary' : ''}`)
+          .attr("cx", (d) => d.x )
+          .attr("cy", (d,i) => d.y),
+          update => update
+            .each((d)=>{
+              
+              d.x=parents[d.parent].x;
+              d.y=parents[d.parent].y + (d.i+1)*this.spacer;
+            })
+            .attr("cx", (d) => d.x)
+            .attr("cy", (d) => d.y))
+
+      svg.v_link = svg.v_link
+        .data(variable_links, d => d.source + '-' + d.target)
+        .join(
+          enter => enter.append('path')
+            .attr('d', d => {
+              let src = variables.find(a => a.val == d.source);
+              let trg = variables.find(a => a.val == d.target);
+              return link_gen({
+                source: [src.x, src.y],
+                target: [trg.x, trg.y]
+              })
+            }),
+          update => update
+            .attr('d', d => {
+              let src = variables.find(a => a.val == d.source);
+              let trg = variables.find(a => a.val == d.target);
+              return link_gen({
+                source: [src.x, src.y],
+                target: [trg.x, trg.y]
+              })
+            })
+        )
+
+      svg.v_label = svg.v_label
+        .data(variables, (d) => d.val)
+        .join(
+          enter => enter.append('text')
+            .text((d) => d.val)
+            .attr("x", d => d.x)
+            .attr("y", d => d.y),
+          update => update
+            .attr("x", d => d.x)
+            .attr("y", d => d.y)
+        )
     }
 
 
@@ -1083,4 +1204,12 @@ function refresh_data(nodes,links){
 
   data.nodes = nodes.map(d => Object.assign(old_node.get(d.val) || {}, d));
   data.links =  links.map(d =>Object.assign(old_link.get(d.source+'-'+d.target) || {}, d));
+}
+
+
+function defocus(){
+  d3.selectAll('.focus').classed('focus',false)
+  svg.box.classed('focus-mode',false);
+  svg.box.on('mouseup',null);
+  svg.box.on('mousemove',null);
 }

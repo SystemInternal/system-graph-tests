@@ -3,6 +3,7 @@
     --system-black:#373737;
     --system-black-30:#C3C3C3;
     --system-blue:rgb(15, 98, 254);
+    --system-red:#CB3823;
     --bg:#F5F5F5;
     --sidebar:340px;
     --cat-disease:#FEB3FF;
@@ -91,11 +92,33 @@ main[data-graph_type="topological"] .topo-only{
     transition:opacity 0.3s;
 } */
 
-.focus-mode g>*:not(.focus){
+.focus-mode g>*:not(.focus,.variable-circles>*,.variable-links>*,.variable-labels>*){
     pointer-events:none;
     /* mix-blend-mode:multiply; */
-    opacity:0.2;
+    opacity:0.1;
 }
+
+#graph:not(.focus-mode) :where(.variable-circles,.variable-links,.variable-labels){
+    display:none;
+}
+
+.variable-labels text{
+    fill:var(--system-red);
+}
+
+.variable-circles circle{
+    stroke:var(--system-red);
+}
+
+.variable-links path{
+    stroke:var(--system-red);
+    opacity:0.5;
+}
+
+/* .focus-mode g.variable-circles>*{
+    pointer-events:all;
+    opacity:1;
+} */
 
 #graph[data-directionality="motion"].focus-mode .animate{
     display:none;
