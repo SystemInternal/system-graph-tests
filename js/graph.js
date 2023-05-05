@@ -672,6 +672,7 @@ const Topological = class {
       d3.select(`#${label.group}_label`)
         .attr('x', this.place_x(label))
         .attr('y', this.place_y(label))
+        .attr('display',this.counts[label.group]>0?'block':'none')
     }
 
     svg.animate_link = svg.animate_link
