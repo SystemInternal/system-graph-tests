@@ -207,6 +207,7 @@ function init(link_lists, nodes) {
 
   key_section.querySelector('input[type="checkbox"]').addEventListener('click', function () {
     categories_visible = key_section.querySelector('input[type="checkbox"]').checked;
+    console.log('categories_visible',categories_visible)
     if (key_section.querySelector('input[type="checkbox').checked) main.classList.add('see-categories')
     else main.classList.remove('see-categories')
 
@@ -231,6 +232,7 @@ function init(link_lists, nodes) {
         if(mode=='topological'){
           mode='force';
           graph=force;
+          
           graph.update(graph_input.nodes, graph_input.links)
         }else if(mode=='force'){
           graph.simulation.stop();
@@ -245,6 +247,7 @@ function init(link_lists, nodes) {
           graph_input = generate_graph_input();
 
           graph=topo;
+          graph.spacer=categories_visible?24:18;
           graph.update(graph_input.nodes, graph_input.links)
         }
       }
