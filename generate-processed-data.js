@@ -5,20 +5,36 @@ let primary_nodes=["coffee","cancer"];
 
 
 
+let input_links_location='data/worst_case_links-edited.json';
+let output_data_location='data/processed-data.json';
 
 generate();
 
-async function generate(){
-    let source_data=await generate_from_source();
-    
-    // console.log(source_data)
 
-    fs.writeFile('data/topo-data.json', JSON.stringify(source_data), err => {
+async function generate(){
+    let processed_data=await generate_from_source();
+    
+    console.log('Finished processing data. Groups found:',{
+            loop:processed_data.link_groups.loop.length,
+            confounding:processed_data.link_groups.confounding.length,
+            mediating:processed_data.link_groups.mediating.length,
+            p0_bidirectional:processed_data.link_groups.p0_bidirectional.length,
+            p0_upstream:processed_data.link_groups.p0_upstream.length,
+            p0_downstream:processed_data.link_groups.p0_downstream.length,
+            p1_bidirectional:processed_data.link_groups.p1_bidirectional.length,
+            p1_upstream:processed_data.link_groups.p1_upstream.length,
+            p1_downstream:processed_data.link_groups.p1_downstream.length,
+            primary:processed_data.link_groups.primary.length
+        }
+    )
+    
+    fs.writeFile(output_data_location, JSON.stringify(processed_data), err => {
         if (err) {
           console.error(err)
           return
         }
     })
+    console.log('Wrote processed data to',output_data_location);
 
 }
 
@@ -49,16 +65,16 @@ const is_bidirectional_with=(node,n)=>{
 
 
 async function generate_from_source(){
-    let links=await find_this('file','data/worst_case_links.json')
+    let links=await find_this('file',input_links_location)
     links=links?JSON.parse(links).links:undefined;
     let taglist=await find_this('file','data/taglist.json')
     taglist=JSON.parse(taglist).tags;
+    console.log('Received data from',input_links_location);
 
+    let nodes_categorized=generate_node_list(links);
+    let link_groups=generate_grouped_links(nodes_categorized,links);
 
-    let nodes_categorized=generate_categorized_nodes(links);
-    let links_categorized=generate_categorized_links(nodes_categorized,links);
-
-    
+    console.log('Setting node group from link groupings');
     let nodes=nodes_categorized.map(a=>{
         let group=a.val==primary_nodes[0]?'p0':false;
         group=a.val==primary_nodes[1]?'p1':group;
@@ -81,12 +97,11 @@ async function generate_from_source(){
     // console.log(nodes);
     return {
         nodes,
-        links_categorized
+        link_groups
     };
 
     function find_type(name){
         let type=undefined;
-        // console.log(taglist);
         
         for(let tag of taglist){
             type=tag.vals.includes(name)?tag.name:type;
@@ -96,8 +111,9 @@ async function generate_from_source(){
     
 }
 
-function generate_categorized_links(nodes,links){
-    let links_categorized={
+function generate_grouped_links(nodes,links){
+    console.log('Looping through and grouping links');
+    let link_groups={
         loop:[],
         confounding:[],
         mediating:[],
@@ -110,6 +126,7 @@ function generate_categorized_links(nodes,links){
         primary:[{source:primary_nodes[0],target:primary_nodes[1],type:'primary'}]
     }
 
+    
     for(let link of links){
         let source=nodes.find(a=>a.val==link.source);
         let target=nodes.find(a=>a.val==link.target);
@@ -136,30 +153,30 @@ function generate_categorized_links(nodes,links){
             let n=primary_nodes.indexOf(primary.val);
 
             if(is_looping(not_primary)){
-                find_and_add(links_categorized,"loop",not_primary.val,link)
+                find_and_add(link_groups,"loop",not_primary.val,link)
             }else if(is_confounding(not_primary)){
-                find_and_add(links_categorized,"confounding",not_primary.val,link)
+                find_and_add(link_groups,"confounding",not_primary.val,link)
             }else if(is_mediating(source)){
-                find_and_add(links_categorized,"mediating",not_primary.val,link)
+                find_and_add(link_groups,"mediating",not_primary.val,link)
             }else if(is_mediating(target)){
-                find_and_add(links_categorized,"mediating",not_primary.val,link)
+                find_and_add(link_groups,"mediating",not_primary.val,link)
             }else if(is_bidirectional_with(not_primary,n)){
-                find_and_add(links_categorized,`p${n}_bidirectional`,not_primary.val,link)
+                find_and_add(link_groups,`p${n}_bidirectional`,not_primary.val,link)
             }else if(is_upstream_of(not_primary,n)){
-                links_categorized[`p${n}_upstream`].push(link);
+                link_groups[`p${n}_upstream`].push(link);
             }else if(is_downstream_of(not_primary,n)){
-                links_categorized[`p${n}_downstream`].push(link);
+                link_groups[`p${n}_downstream`].push(link);
             }else{
-                console.log('includes non-primary but not added:',link)
+                console.log('[includes non-primary but not added:',link,']')
             }
 
         }else{
-            console.log('not added, does not include non-primary:',link)
+            console.log('[not added, does not include non-primary:',link,']')
         }
 
     }
 
-    return links_categorized;
+    return link_groups;
 
 
 
@@ -181,8 +198,9 @@ function generate_categorized_links(nodes,links){
 }
 
 
-function generate_categorized_nodes(links){
+function generate_node_list(links){
     let nodes=[];
+    console.log('Making initial list of nodes and determining if they target p0 and/or p1');
     for(let link of links){
         
         let source=nodes.find(a=>a.val==link.source)
