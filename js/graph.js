@@ -72,7 +72,7 @@ let map = {};
 
 // placeholder variables and links for the link click interaction
 let variables = [{ val: 'variable A', parent: 'source' }, { val: 'variable B', parent: 'source' }, { val: 'variable C', parent: 'source' }, { val: 'variable D', parent: 'source' }, { val: 'variable E', parent: 'source' }, { val: 'variable 1', parent: 'target' }, { val: 'variable 2', parent: 'target' }, { val: 'variable 3', parent: 'target' }, { val: 'variable 4', parent: 'target' }];
-let variable_links = [{ source: 'variable A', target: 'variable 2' }, { source: 'variable B', target: 'variable 3' }, { source: 'variable C', target: 'variable 1' }, { source: 'variable D', target: 'variable 3' }, { source: 'variable E', target: 'variable 4' }];
+let variable_links = [{ source: 'variable A', target: 'variable 2' }, { source: 'variable 3', target: 'variable B' }, { source: 'variable 1', target: 'variable C' }, { source: 'variable D', target: 'variable 3' }, { source: 'variable 4', target: 'variable E' },{ source: 'variable E', target: 'variable 4' }];
 
 // colors for different categories/types
 let type_colors = { disease: { color: '#FDCCFF', checked: true }, treatment: { color: '#9EFFDD', checked: true }, genetic: { color: '#FFFFBD', checked: true }, behavior: { color: '#FFCFBD', checked: true }, symptom: { color: '#D2CCFF', checked: true }, other: { color: 'var(--bg)', checked: true } }
@@ -459,6 +459,9 @@ const Topological = class {
                 source: [src.x, src.y],
                 target: [trg.x, trg.y]
               })
+            })
+            .each(function (d, i, nodes) {
+              d.point = get_halfway_point(nodes[i])
             }),
           update => update
             .attr('d', d => {
@@ -469,8 +472,46 @@ const Topological = class {
                 target: [trg.x, trg.y]
               })
             })
+            .each(function (d, i, nodes) {
+              d.point = get_halfway_point(nodes[i])
+            })
         )
 
+      svg.v_animate_link = svg.v_animate_link
+      .data(variable_links, d => d.source + '-' + d.target)
+      .join(
+        enter => enter.append('path')
+          .attr('d', d => {
+            let src = variables.find(a => a.val == d.source);
+            let trg = variables.find(a => a.val == d.target);
+            return link_gen({
+              source: [src.x, src.y],
+              target: [trg.x, trg.y]
+            })
+          })
+          .style('--str', (d, i, nodes) => nodes[i].getTotalLength() + 'px'),
+        update => update
+          .attr('d', d => {
+            let src = variables.find(a => a.val == d.source);
+            let trg = variables.find(a => a.val == d.target);
+            return link_gen({
+              source: [src.x, src.y],
+              target: [trg.x, trg.y]
+            })
+          })
+          .style('--str', (d, i, nodes) => nodes[i].getTotalLength() + 'px')
+      )
+
+      svg.v_arrow = svg.v_arrow
+        .data(variable_links, d => d.source + '-' + d.target)
+        .join(enter => enter.append('path')
+          .attr('d', 'M0.950256 1L2.95026 3L4.95026 5L0.950256 9')
+          .attr('id', d => d.type == 'primary' ? 'arrow-primary' : '')
+          .style('transform', d => `translate(${d.point.x}px,${d.point.y}px) rotate(${d.point.angle + 180}deg) translateX(-2px) translateY(-5px)`),
+          update => update
+            .style('transform', d => `translate(${d.point.x}px,${d.point.y}px) rotate(${d.point.angle + 180}deg) translateX(-2px) translateY(-5px)`)
+        )
+      
       svg.v_label = svg.v_label
         .data(variables, (d) => d.val)
         .join(
@@ -1147,6 +1188,15 @@ function set_up_d3() {
     .attr("vector-effect", "non-scaling-stroke")
     .selectAll("path")
 
+  svg.v_animate_link = svg.box.insert("g",'.labels')
+    .attr('class', 'variable-animate')
+    .attr("stroke", "black")
+    .attr("stroke-opacity", 1)
+    .attr("stroke-width", 1)
+    .attr("stroke-linecap", "round")
+    .attr("vector-effect", "non-scaling-stroke")
+    .selectAll("path")
+
   svg.v_link = svg.box.append("g")
     .attr('class', 'variable-links')
     .attr("stroke", "black")
@@ -1155,6 +1205,23 @@ function set_up_d3() {
     .attr("stroke-linecap", "round")
     .attr("vector-effect", "non-scaling-stroke")
     .selectAll("path")
+
+  svg.v_arrow = svg.box.append('g')
+    .attr('class', 'variable-arrows')
+    .attr("stroke-linecap", "round")
+    .attr("vector-effect", "non-scaling-stroke")
+    .selectAll('path')
+
+  
+  
+  // svg.v_link = svg.box.append("g")
+  //   .attr('class', 'variable-links')
+  //   .attr("stroke", "black")
+  //   .attr("stroke-opacity", 1)
+  //   .attr("stroke-width", 1)
+  //   .attr("stroke-linecap", "round")
+  //   .attr("vector-effect", "non-scaling-stroke")
+  //   .selectAll("path")
 
   svg.arrow = svg.box.append('g')
     .attr('class', 'link-arrows')

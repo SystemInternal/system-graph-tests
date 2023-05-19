@@ -94,13 +94,13 @@ main[data-graph_type="topological"] .topo-only{
     transition:opacity 0.3s;
 } */
 
-.focus-mode g>*:not(.focus,.variable-circles>*,.variable-links>*,.variable-labels>*){
+.focus-mode g>*:not(.focus,.variable-circles>*,.variable-links>*,.variable-labels>*,.variable-arrows>*,.variable-animate>*){
     pointer-events:none;
     /* mix-blend-mode:multiply; */
     opacity:0.1;
 }
 
-#graph:not(.focus-mode) :where(.variable-circles,.variable-links,.variable-labels){
+#graph:not(.focus-mode) :where(.variable-circles,.variable-links,.variable-labels,.variable-arrows,.variable-animate>*){
     display:none;
 }
 
@@ -284,21 +284,21 @@ h3 select{
 
 
 
-.link-arrows{
+.link-arrows,.variable-arrows{
     display:none;
     /* transform-origin:center; */
     /* transform:translate(-2px,-4px); */
 }
 
-#graph[data-directionality="arrows"] .link-arrows{
+#graph[data-directionality="arrows"] .link-arrows,#graph.focus-mode[data-directionality="arrows"] .variable-arrows{
     display:block;
 }
 
-.animate{
+.animate,.variable-animate{
     display:none;
 }
 
-#graph[data-directionality="motion"] .animate{
+#graph[data-directionality="motion"] .animate,#graph.focus-mode[data-directionality="motion"] .variable-animate{
     display:block;
 }
 
