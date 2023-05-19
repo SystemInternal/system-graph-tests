@@ -75,7 +75,7 @@ let variables = [{ val: 'variable A', parent: 'source' }, { val: 'variable B', p
 let variable_links = [{ source: 'variable A', target: 'variable 2' }, { source: 'variable B', target: 'variable 3' }, { source: 'variable C', target: 'variable 1' }, { source: 'variable D', target: 'variable 3' }, { source: 'variable E', target: 'variable 4' }];
 
 // colors for different categories/types
-let type_colors = { disease: { color: '#FEB3FF', checked: true }, treatment: { color: '#7EF5CB', checked: true }, genetic: { color: '#FFFF00', checked: true }, behavior: { color: '#FFA07A', checked: true }, symptom: { color: '#cba1ff', checked: true }, other: { color: 'black', checked: true } }
+let type_colors = { disease: { color: '#FDCCFF', checked: true }, treatment: { color: '#9EFFDD', checked: true }, genetic: { color: '#FFFFBD', checked: true }, behavior: { color: '#FFCFBD', checked: true }, symptom: { color: '#D2CCFF', checked: true }, other: { color: 'var(--bg)', checked: true } }
 
 // sets names of primary nodes and intermediary categories
 let primary_node_str = { p0: "coffee", p1: "cancer" };
@@ -317,7 +317,7 @@ const Topological = class {
             })
           })
           .on('click', this.focus_link.bind(this))
-          .on('mouseenter', this.mouseenter.bind(this)),
+          .on('mouseenter', this.link_mouseenter.bind(this)),
         update => update
           .attr('d', d => {
             let src = this.nodes.find(a => a.val == d.source);
@@ -346,6 +346,7 @@ const Topological = class {
         .attr('data-val', (d) => d.val)
         .attr('data-group', (d) => d.group)
         .attr('class', (d) => `node ${d.primary ? 'primary' : ''}`)
+        .on('mouseenter', this.node_mouseenter.bind(this))
         .attr("cx", d => d.x)
         .attr("cy", d => d.y),
         update => update
@@ -358,6 +359,7 @@ const Topological = class {
         enter => enter.append('text')
           .attr('class', (d) => `noselect ${d.primary ? 'primary' : ''} ${d.type ? 'has-type' : ''}`)
           .attr('data-val', (d) => d.val)
+          .on('mouseenter', this.node_mouseenter.bind(this))
           .text((d) => d.val)
           .each(function (d) {
 
@@ -374,12 +376,12 @@ const Topological = class {
       .data(data.nodes, (d) => d.val)
       .join(enter => enter.append('rect')
         .attr('class', (d) => d.primary ? 'primary' : '')
-        .style('fill', (d) => d.type ? `var(--cat-${d.type})` : 'none')
+        .style('fill', (d) => d.type ? `var(--cat-${d.type})` : 'var(--cat-other)')
         .attr('rx', d => d.bbox.height / 2)
         .attr('ry', d => d.bbox.height / 2)
         .attr('data-type', (d) => d.type)
         .attr("width", d => {
-          return d.bbox.width + this.x_margin * 2 + 'px'
+          return d.bbox.width + this.x_margin * 2 + 4 + 'px'
         })
         .attr("height", d => d.bbox.height + this.y_margin * 2 + 'px')
         .attr("x", d => d.x)
@@ -515,12 +517,14 @@ const Topological = class {
 
   place_x(node) {
     // sets x placement of node based on its group
+    let graph_w=Math.max(w,800);
 
-    if (node.group == 'p0') return w * 0.3;
-    else if (node.group == 'p1') return w * 0.7;
+
+    if (node.group == 'p0') return graph_w * 0.3;
+    else if (node.group == 'p1') return graph_w * 0.7;
     else if (node.group == 'upstream_p0' || node.group == 'confounder') return 20;
-    else if (node.group == 'downstream_p1') return w * 0.9;
-    else if (node.group == 'mediator' || node.group == 'feedback') return w * 0.5;
+    else if (node.group == 'downstream_p1') return graph_w * 0.9;
+    else if (node.group == 'mediator' || node.group == 'feedback') return graph_w * 0.5;
   }
 
   place_y(node) {
@@ -535,7 +539,7 @@ const Topological = class {
   }
 
 
-  mouseenter(event, d) {
+  link_mouseenter(event, d) {
     // link hover event handling
     let link = svg.link.filter((el) => el.source == d.source && el.target == d.target);
     let arrow = svg.arrow.filter((el) => el.source == d.source && el.target == d.target || el.target == d.source && el.source == d.target);
@@ -547,7 +551,33 @@ const Topological = class {
     hover_margin.on('mouseleave', function () {
       link.classed('hover', false)
       arrow.classed('hover', false);
-      link.on('mouseleave', null)
+      hover_margin.on('mouseleave', null)
+    })
+
+  }
+
+  node_mouseenter(event, d) {
+  
+    // link hover event handling
+    let node = svg.node.filter((el) => el.val == d.val);
+    let label = svg.label.filter((el) => el.val == d.val);
+    console.log(label);
+    let arrows = svg.arrow.filter((el) => el.source == d.val || el.target == d.val);
+    let links = svg.link.filter((el) => el.source == d.val || el.target == d.val);
+
+    let hover_margin = d3.select(event.srcElement);
+    d3.selectAll('.hover').classed('hover', false);
+    node.classed('hover', true)
+    label.classed('hover', true)
+    links.classed('hover', true)
+    arrows.classed('hover', true);
+    // this.in_focus = d;
+    hover_margin.on('mouseleave', function () {
+      links.classed('hover', false)
+      arrows.classed('hover', false);
+      node.classed('hover', false)
+      label.classed('hover', false)
+      node.on('mouseleave', null)
     })
 
   }
@@ -716,7 +746,7 @@ const Force = class {
         .attr('rx', d => d.bbox.height / 2)
         .attr('ry', d => d.bbox.height / 2)
         .attr('data-type', (d) => d.type)
-        .attr("width", d => d.bbox.width + this.x_margin * 2 + 'px')
+        .attr("width", d => d.bbox.width + this.x_margin * 2 + 4 + 'px')
         .attr("height", d => d.bbox.height + this.y_margin * 2 + 'px')
         .call(this.drag(this.simulation))
       )
@@ -1044,7 +1074,7 @@ function set_up_graph_settings() {
 function set_up_d3() {
   svg.box = d3.select(dom_svg);
 
-  svg.link = svg.box.append("g")
+  svg.link = svg.box.insert("g",'.labels')
     .attr('class', 'link-lines')
     .attr("stroke", "black")
     .attr("stroke-opacity", 1)
@@ -1053,7 +1083,7 @@ function set_up_d3() {
     .attr("vector-effect", "non-scaling-stroke")
     .selectAll("path")
 
-  svg.animate_link = svg.box.append("g")
+  svg.animate_link = svg.box.insert("g",'.labels')
     .attr('class', 'animate')
     .attr("stroke", "black")
     .attr("stroke-opacity", 1)
@@ -1063,7 +1093,7 @@ function set_up_d3() {
     .selectAll("path")
 
 
-  svg.arrow = svg.box.append('g')
+  svg.arrow = svg.box.insert('g','.labels')
     .attr('class', 'link-arrows')
     .attr("stroke-linecap", "round")
     .attr("vector-effect", "non-scaling-stroke")
@@ -1097,7 +1127,7 @@ function set_up_d3() {
     .attr("vector-effect", "non-scaling-stroke")
     .selectAll("path")
 
-  svg.animate_link = svg.box.append("g")
+  svg.animate_link = svg.box.insert("g",'.labels')
     .attr('class', 'animate')
     .attr("stroke", "black")
     .attr("stroke-opacity", 1)

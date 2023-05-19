@@ -6,11 +6,13 @@
     --system-red:#CB3823;
     --bg:#F5F5F5;
     --sidebar:340px;
-    --cat-disease:#FEB3FF;
-    --cat-treatment:#7EF5CB;
-    --cat-genetic:#FFFF00;
-    --cat-behavior:#FFA07A;
-    --cat-symptom:#cba1ff;
+    --cat-disease:#FDCCFF;
+    --cat-treatment:#9EFFDD;
+    --cat-genetic:#FFFFBD;
+    --cat-behavior:#FFCFBD;
+    --cat-symptom:#D2CCFF;
+    --cat-other:#F5F5F5;
+    --animate-col:grey;
 }
 
 main{
@@ -102,18 +104,7 @@ main[data-graph_type="topological"] .topo-only{
     display:none;
 }
 
-.variable-labels text{
-    fill:var(--system-red);
-}
 
-.variable-circles circle{
-    stroke:var(--system-red);
-}
-
-.variable-links path{
-    stroke:var(--system-red);
-    opacity:0.5;
-}
 
 /* .focus-mode g.variable-circles>*{
     pointer-events:all;
@@ -144,7 +135,7 @@ section{
 
 .row-wrap[data-type="other"] span::before{
     display:inline-block;
-    background-color: black;
+    background-color: var(--cat-other);
     width:20px;
     height:20px;
     margin-right:5px;
@@ -268,43 +259,11 @@ h3 select{
 
 
 /* #C3C3C3 */
-text{
-    cursor:default;
-    font-family:'Monument Grotesk', sans-serif;
-    /* fill:rgba(255,0,0,0.3); */
-    paint-order: stroke fill;
-    
-    stroke:var(--bg);
-    stroke-width:2px;
-    font-size:13px;
-    fill:var(--system-black);
-    transform:translate(6px,4px);
-    text-transform:capitalize;
-}
 
 
-rect{
-    transform:translate(9px,-9px);
-}
-rect.primary{
-    transform:translate(10px,-12px);
-}
-
-.see-categories text.has-type{
-    transform:translate(16px,4px);
-    stroke:none;
-}
 
 
-text.primary{
-    font-size:16px;
-    font-weight:600;
-}
-text.label{
-    /* font-weight:600; */
-    transform:translate(-6px,2px);
-    opacity:0.8;
-}
+
 
 
 
@@ -317,25 +276,13 @@ text.label{
 }
 
 
-circle{
-    fill:var(--bg);
-    stroke:var(--system-black);
-    stroke-width:2px;
-    /* paint-order:stroke; */
-}
 
 
 
-line,polyline,path{
-    fill:none;
-    stroke:var(--system-black-30);
-}
 
-path.hover,path.focus{
-    cursor:pointer;
-    stroke:var(--system-blue);
-    stroke-width:2px;
-}
+
+
+
 
 .link-arrows{
     display:none;
@@ -355,11 +302,7 @@ path.hover,path.focus{
     display:block;
 }
 
-marker{
-    fill:none;
-    stroke:var(--system-black-30);
-    stroke-width:1px;
-}
+
 
 #arrow-primary{
     stroke:var(--system-black);
@@ -368,10 +311,7 @@ marker{
 
 
 
-line.primary,polyline.primary,path.primary{
-    stroke:var(--system-black);
-    stroke-width:2px;
-}
+
 
 #graph[data-sign="dashed"] .link-lines :where(line.negative,polyline.negative,path.negative){
     stroke-dasharray:5px 5px;
@@ -380,29 +320,14 @@ line.primary,polyline.primary,path.primary{
 
 
 
-.animate line,.animate polyline,.animate path{
 
-    --col:salmon;
-    stroke:var(--col);
-    opacity:0.2;
-    stroke-width:4px;
-    stroke-linecap: round;
-   
-    --gap:60px;
-    animation: directionality 2s linear infinite forwards;
-    stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
-    stroke-dashoffset:var(--str);
-}
 
 #graph[data-sign="motion-color"] .animate :where(line.negative,polyline.negative,path.negative){
-    --col:slateblue;
+    --animate-col:slateblue;
 }
 
 
-.animate line.primary,.animate polyline.primary,.animate path.primary{
-    opacity:0.2;
-    stroke-width:8px;
-}
+
 
 @keyframes directionality{
     0%{

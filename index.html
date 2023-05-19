@@ -122,6 +122,103 @@
   
       </div>
       <svg id="graph" data-graph_type="topological">
+      <style>
+        .variable-labels text{
+            fill:var(--system-black);
+        }
+
+        .variable-circles circle{
+            stroke:var(--system-black);
+        }
+
+        .variable-links path{
+            stroke:var(--system-black-30);
+        }
+        text{
+            cursor:default;
+            font-family:'Monument Grotesk', sans-serif;
+            /* fill:rgba(255,0,0,0.3); */
+            paint-order: stroke fill;
+            
+            stroke:var(--bg);
+            stroke-width:2px;
+            font-size:13px;
+            fill:var(--system-black);
+            transform:translate(6px,4px);
+            text-transform:capitalize;
+        }
+
+        rect{
+            transform:translate(8.5px,-9px);
+        }
+        rect.primary{
+            transform:translate(10px,-12px);
+        }
+
+        .see-categories text{
+            transform:translate(16px,4px);
+            stroke:none;
+        }
+
+        text.primary{
+            font-size:16px;
+            font-weight:600;
+        }
+        text.label{
+            /* font-weight:600; */
+            transform:translate(-6px,2px);
+            color:rgba(55,55,55,1);
+            font-size:10px;
+            text-transform:uppercase;
+        }
+        circle{
+            fill:var(--bg);
+            stroke:var(--system-black);
+            stroke-width:2px;
+            /* paint-order:stroke; */
+        }
+        line,polyline,path{
+            fill:none;
+            stroke:var(--system-black-30);
+        }
+        path.hover,path.focus,path.primary.hover,path.primary.focus,circle.hover,#arrow-primary.hover,#arrow-primary.focus{
+            cursor:pointer;
+            stroke:var(--system-blue);
+            stroke-width:2px;
+        }
+
+        .node-labels text.hover{
+          cursor:pointer !important;
+          fill:var(--system-blue);
+        }
+        marker{
+            fill:none;
+            stroke:var(--system-black-30);
+            stroke-width:1px;
+        }
+        line.primary,polyline.primary,path.primary{
+            stroke:var(--system-black);
+            stroke-width:2px;
+        }
+        .animate line,.animate polyline,.animate path{
+
+            
+            stroke:var(--animate-col);
+            opacity:0.2;
+            stroke-width:4px;
+            stroke-linecap: round;
+          
+            --gap:60px;
+            animation: directionality 2s linear infinite forwards;
+            stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
+            stroke-dashoffset:var(--str);
+        }
+        .animate line.primary,.animate polyline.primary,.animate path.primary{
+            opacity:0.2;
+            stroke-width:8px;
+        }
+              
+      </style>
         <defs>
           <marker
             id="arrow"
