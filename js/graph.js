@@ -423,7 +423,7 @@ const Topological = class {
         source: this.nodes.find(a => a.val == this.in_focus.source),
         target: this.nodes.find(a => a.val == this.in_focus.target)
       }
-      console.log(parents)
+     
 
       svg.v_node = svg.v_node
         .data(variables, (d) => d.val)
@@ -561,7 +561,7 @@ const Topological = class {
     // link hover event handling
     let node = svg.node.filter((el) => el.val == d.val);
     let label = svg.label.filter((el) => el.val == d.val);
-    console.log(label);
+
     let arrows = svg.arrow.filter((el) => el.source == d.val || el.target == d.val);
     let links = svg.link.filter((el) => el.source == d.val || el.target == d.val);
 
@@ -584,7 +584,7 @@ const Topological = class {
 
   focus_link(event, d) {
     // initiates focus on link
-    console.log(d, this.in_focus);
+    
     let link = svg.link.filter((el) => el.source == d.source && el.target == d.target);
     let arrow = svg.arrow.filter((el) => el.source == d.source && el.target == d.target || el.target == d.source && el.source == d.target);
     let src_node = svg.node.filter((el) => el.val == d.source);
@@ -920,7 +920,6 @@ function set_up_category_controls() {
 
   category_controls.querySelector('input[type="checkbox"]').addEventListener('click', function () {
     categories_visible = category_controls.querySelector('input[type="checkbox"]').checked;
-    console.log('categories_visible', categories_visible)
     if (category_controls.querySelector('input[type="checkbox').checked) main.classList.add('see-categories')
     else main.classList.remove('see-categories')
 
@@ -967,11 +966,14 @@ function set_up_count_controls(link_groups) {
       let range = map[key].field.querySelector('input');
       let counter = map[key].field.querySelector('.count');
       range.max = link_groups[key].length;
-      range.value = parts[0] == 'p0' && key == 'p0_downstream' || parts[0] == 'p1' && key == 'p1_upstream' ? 0 : link_groups[key].length;
-
+      range.value = parts[0] == 'p0' && key == 'p0_downstream' || parts[0] == 'p1' && key == 'p1_upstream' ? 0 
+        : key == 'p1_downstream' || key == 'p0_upstream' ?  Math.min(29,link_groups[key].length) 
+        : Math.min(15,link_groups[key].length);
+      map[key].count = parseInt(range.value);
+      console.log(key,range.value)
 
       counter.style.setProperty('--max', `"/${link_groups[key].length + ']'}"`);
-      counter.innerText = link_groups[key].length;
+      counter.innerText =range.value;
 
 
       range.addEventListener('input', function () {
