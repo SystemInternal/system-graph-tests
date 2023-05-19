@@ -602,6 +602,7 @@ const Topological = class {
     // link hover event handling
     let node = svg.node.filter((el) => el.val == d.val);
     let label = svg.label.filter((el) => el.val == d.val);
+    let label_bg = svg.label_bg.filter((el) => el.val == d.val);
 
     let arrows = svg.arrow.filter((el) => el.source == d.val || el.target == d.val);
     let links = svg.link.filter((el) => el.source == d.val || el.target == d.val);
@@ -612,12 +613,14 @@ const Topological = class {
     label.classed('hover', true)
     links.classed('hover', true)
     arrows.classed('hover', true);
+    label_bg.classed('hover', true);
     // this.in_focus = d;
     hover_margin.on('mouseleave', function () {
       links.classed('hover', false)
       arrows.classed('hover', false);
       node.classed('hover', false)
       label.classed('hover', false)
+      label_bg.classed('hover', false);
       node.on('mouseleave', null)
     })
 
@@ -627,6 +630,7 @@ const Topological = class {
     // initiates focus on link
     
     let link = svg.link.filter((el) => el.source == d.source && el.target == d.target);
+    let animate = svg.animate_link.filter((el) => el.source == d.source && el.target == d.target);
     let arrow = svg.arrow.filter((el) => el.source == d.source && el.target == d.target || el.target == d.source && el.source == d.target);
     let src_node = svg.node.filter((el) => el.val == d.source);
     let trg_node = svg.node.filter((el) => el.val == d.target);
@@ -635,7 +639,7 @@ const Topological = class {
     let src_label_bg = svg.label_bg.filter((el) => el.val == d.source);
     let trg_label_bg = svg.label_bg.filter((el) => el.val == d.target);
 
-    let focused = d3.selectAll([...link, ...arrow, ...src_node, ...trg_node, ...src_label, ...trg_label, ...src_label_bg, ...trg_label_bg])
+    let focused = d3.selectAll([...link, ...animate, ...arrow, ...src_node, ...trg_node, ...src_label, ...trg_label, ...src_label_bg, ...trg_label_bg])
 
     if (d.source == this.in_focus.source && d.target == this.in_focus.target) {
       focused.classed('focus', true);
@@ -961,8 +965,8 @@ function set_up_category_controls() {
 
   category_controls.querySelector('input[type="checkbox"]').addEventListener('click', function () {
     categories_visible = category_controls.querySelector('input[type="checkbox"]').checked;
-    if (category_controls.querySelector('input[type="checkbox').checked) main.classList.add('see-categories')
-    else main.classList.remove('see-categories')
+    if (category_controls.querySelector('input[type="checkbox').checked) svg.box.classed('see-categories',true)
+    else svg.box.classed('see-categories',false)
 
     graph.spacer = categories_visible ? 24 : 18;
     graph_input = generate_graph_input();

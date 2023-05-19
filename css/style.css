@@ -111,7 +111,7 @@ main[data-graph_type="topological"] .topo-only{
     opacity:1;
 } */
 
-#graph[data-directionality="motion"].focus-mode .animate{
+#graph[data-directionality="motion"].focus-mode .animate>*:not(.focus){
     display:none;
 }
 

@@ -151,8 +151,11 @@
         rect{
             transform:translate(8.5px,-9px);
         }
+        rect.hover{
+            stroke:var(--system-blue);
+        }
         rect.primary{
-            transform:translate(10px,-12px);
+            transform:translate(8px,-12px);
         }
 
         .see-categories text{
@@ -189,8 +192,13 @@
 
         .node-labels text.hover{
           cursor:pointer !important;
+        }
+
+        
+        #graph:not(.see-categories) .node-labels text.hover{
           fill:var(--system-blue);
         }
+
         marker{
             fill:none;
             stroke:var(--system-black-30);
@@ -212,6 +220,11 @@
             animation: directionality 2s linear infinite forwards;
             stroke-dasharray:var(--gap) calc(var(--str) - var(--gap));
             stroke-dashoffset:var(--str);
+        }
+
+
+        .animate path.focus{
+          stroke-width:6px;
         }
         .animate path.primary{
             opacity:0.2;
