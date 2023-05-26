@@ -97,7 +97,7 @@ fetch(input_data_source)
   .then((json) => {
     nodes = json.nodes;
     link_groups = json.link_groups;
-
+    primary_node_str = {p0:json.primary_node_strings[0],p1:json.primary_node_strings[1]}
     init(link_groups, nodes);
 
   });
@@ -749,10 +749,10 @@ const Force = class {
         .attr('data-val', (d) => d.val)
         .attr('class', (d) => `node ${d.primary ? 'primary' : ''}`)
         .each(function (d) {
-          if (d.val == 'coffee') {
+          if (d.val == primary_node_str.p0) {
             d.fx = w / 4;
             d.fy = h / 4;
-          } else if (d.val == 'cancer') {
+          } else if (d.val == primary_node_str.p1) {
             d.fx = w / 4 * 3;
             d.fy = h / 4 * 3;
           }
@@ -761,10 +761,10 @@ const Force = class {
         .on('click', this.clicked.bind(this)),
         update => update.each(function (d) {
           if (mode_transition) {
-            if (d.val == 'coffee') {
+            if (d.val == primary_node_str.p0) {
               d.fx = w / 4;
               d.fy = h / 4;
-            } else if (d.val == 'cancer') {
+            } else if (d.val == primary_node_str.p1) {
               d.fx = w / 4 * 3;
               d.fy = h / 4 * 3;
             }

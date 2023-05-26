@@ -1,7 +1,7 @@
 const fs   = require('fs');
 
 
-let primary_nodes=["coffee","cancer"];
+let primary_node_strings=["coffee","cancer"];
 
 
 
@@ -76,8 +76,8 @@ async function generate_from_source(){
 
     console.log('Setting node group from link groupings');
     let nodes=nodes_categorized.map(a=>{
-        let group=a.val==primary_nodes[0]?'p0':false;
-        group=a.val==primary_nodes[1]?'p1':group;
+        let group=a.val==primary_node_strings[0]?'p0':false;
+        group=a.val==primary_node_strings[1]?'p1':group;
         group=is_looping(a)&&!group?'feedback':group;
         group=is_confounding(a)&&!group?'confounder':group;
         group=is_mediating(a)&&!group?'mediator':group;
@@ -88,7 +88,7 @@ async function generate_from_source(){
         
         return {
             val:a.val,
-            primary:primary_nodes.includes(a.val),
+            primary:primary_node_strings.includes(a.val),
             type:find_type(a.val),
             group:group
         };
@@ -97,7 +97,8 @@ async function generate_from_source(){
     // console.log(nodes);
     return {
         nodes,
-        link_groups
+        link_groups,
+        primary_node_strings
     };
 
     function find_type(name){
@@ -123,7 +124,7 @@ function generate_grouped_links(nodes,links){
         p1_bidirectional:[],
         p1_upstream:[],
         p1_downstream:[],
-        primary:[{source:primary_nodes[0],target:primary_nodes[1],type:'primary'}]
+        primary:[{source:primary_node_strings[0],target:primary_node_strings[1],type:'primary'}]
     }
 
     
@@ -137,20 +138,20 @@ function generate_grouped_links(nodes,links){
         link.sign=Math.random()<=0.7?'positive':'negative';
 
 
-        if(primary_nodes.includes(source.val)){
+        if(primary_node_strings.includes(source.val)){
             primary=source;
-            if(!primary_nodes.includes(target.val)){
+            if(!primary_node_strings.includes(target.val)){
                 not_primary=target;
             }
-        }else if(primary_nodes.includes(target.val)){
+        }else if(primary_node_strings.includes(target.val)){
             primary=target;
-            if(!primary_nodes.includes(source.val)){
+            if(!primary_node_strings.includes(source.val)){
                 not_primary=source;
             }
         }
 
         if(not_primary){
-            let n=primary_nodes.indexOf(primary.val);
+            let n=primary_node_strings.indexOf(primary.val);
 
             if(is_looping(not_primary)){
                 find_and_add(link_groups,"loop",not_primary.val,link)
@@ -207,24 +208,24 @@ function generate_node_list(links){
         if (!source){
             nodes.push({
                 val:link.source,
-                p0_target:link.target==primary_nodes[0],
-                p1_target:link.target==primary_nodes[1]
+                p0_target:link.target==primary_node_strings[0],
+                p1_target:link.target==primary_node_strings[1]
             });
         }else{
-            if(!source.p0_target) source.p0_target=link.target==primary_nodes[0]
-            if(!source.p1_target) source.p1_target=link.target==primary_nodes[1]
+            if(!source.p0_target) source.p0_target=link.target==primary_node_strings[0]
+            if(!source.p1_target) source.p1_target=link.target==primary_node_strings[1]
         }
 
         let target=nodes.find(a=>a.val==link.target);
         if (!target){
             nodes.push({
                 val:link.target,
-                p0_source:link.source==primary_nodes[0],
-                p1_source:link.source==primary_nodes[1]
+                p0_source:link.source==primary_node_strings[0],
+                p1_source:link.source==primary_node_strings[1]
             });
         }else{
-            if(!target.p0_source) target.p0_source=link.source==primary_nodes[0]
-            if(!target.p1_source) target.p1_source=link.source==primary_nodes[1]
+            if(!target.p0_source) target.p0_source=link.source==primary_node_strings[0]
+            if(!target.p1_source) target.p1_source=link.source==primary_node_strings[1]
         }
     }
 
